@@ -21,20 +21,19 @@ func NewApp(d db.DB, cors bool) App {
 	if !cors {
 		techHandler = disableCors(techHandler)
 	}
+	app.handlers["/api/technologies"] = techHandler
 
 	typeHandler := app.GetTypes
 	if !cors {
 		typeHandler = disableCors(typeHandler)
 	}
-
-	app.handlers["/api/technologies"] = techHandler
 	app.handlers["/api/types"] = typeHandler
+
 	app.handlers["/"] = http.FileServer(http.Dir("/webapp")).ServeHTTP
 	return app
 }
 
 func (a *App) Serve() error {
-	// r := router.Router()
 	for path, handler := range a.handlers {
 		http.Handle(path, handler)
 	}
