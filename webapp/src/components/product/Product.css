@@ -1,0 +1,36 @@
+.react-datepicker-wrapper{
+    /* float: left; */
+    width: 92.2%;
+     /* width: -webkit-fill-available; */
+    /*position: absolute; */
+    /* inline-size: -webkit-fill-available; */
+}
+
+.input-group-prepend {
+    place-self: center;
+}
+
+.icon-datepicker{
+    float: right;
+    /* background-color: silver; */
+    /* width: 32px; */
+    /* text-align: center;
+    justify-content: center;
+    display: flex;
+    font-size: xx-large; */
+    /* position: sticky; */
+    /* height: 100%; */
+}
+
+.table{
+    margin-top: 20px;
+}
+
+.btn {
+    width: 73px;
+    float: right;
+}
+
+.btn-cancel {
+    margin-right: 20px;
+}
