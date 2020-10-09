@@ -4,13 +4,15 @@
   "private": true,
   "dependencies": {
     "axios": "~0.20.0",
+    "formik": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-validation": "^3.0.7",
-    "validator": "^13.1.17"
+    "validator": "^13.1.17",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "~4.2.4",
