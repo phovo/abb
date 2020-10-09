@@ -6,6 +6,11 @@ import { Tech } from "../tech/Tech";
 import { Type } from '../type/Type';
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        // document.getElementById('body').id = 'page-top';
+    }
+
     HomeHTML = <div>
                     <h2 className="title">abbp</h2>
                     <div className="logo"><img src={logo} height="150px" alt="logo" /></div>
@@ -21,6 +26,7 @@ class Home extends Component {
                             <Type />
                     </div>
                 </div>
+                
     render() {
         return (
             <TemplateMain name={this.HomeHTML} />

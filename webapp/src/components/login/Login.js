@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './Login.css';
+// import './Login.css';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import CheckButton from 'react-validation/build/button';
@@ -9,98 +9,85 @@ export default class Login extends Component {
 
     constructor(props) {
         super(props);
+        const elementBody = document.getElementById('body');
+        elementBody.classList.add("bg-gradient-primary");
+
         this.state = {
             username: '',
             password: ''
         };
     }
 
-    getValueForm = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-    }
+    // getValueForm = (event) => {
+    //     this.setState({
+    //         [event.target.name]: event.target.value
+    //     });
+    // }
 
-    onSubmit = (e) => {
-        e.preventDefault();
-        this.form.validateAll();
-        if ( this.checkBtn.context._errors.length === 0 ) {
-            // compare result after call api here.
-            const resultApi = false;
-            if (resultApi) {
-                
-            } else {
-                document.getElementById("us_pass_invalid").style.display = 'block';
-            }
-        }
-    }
+    // onSubmit = (e) => {
+    //     e.preventDefault();
+    //     this.form.validateAll();
+    //     if ( this.checkBtn.context._errors.length === 0 ) {
+    //         // compare result after call api here.
+    //         const resultApi = false;
+    //         if (resultApi) {
+
+    //         } else {
+    //             document.getElementById("us_pass_invalid").style.display = 'block';
+    //         }
+    //     }
+    // }
 
     render() {
         return (
             <div className="container">
-                <div className="d-flex justify-content-center h-100">
-                    <div className="card">
-                        <div className="card-header">
-                            <h3>Sign In</h3>
-                            
-                            <div className="d-flex justify-content-end social_icon">
-                                <span><i className="fab fa-facebook-square"></i></span>
-                                <span><i className="fab fa-google-plus-square"></i></span>
-                                <span><i className="fab fa-twitter-square"></i></span>
-                            </div>
-                        </div>
-                        <p id="us_pass_invalid"> Username or password invalid </p>
-                        <div className="card-body">
-                            <Form onSubmit={e => this.onSubmit(e)} ref={c => { this.form = c }}>
-                                <div className="input-group form-group">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text"><i className="fas fa-user"></i></span>
+                {/* Outer Row */}
+                <div className="row justify-content-center">
+                    <div className="col-xl-10 col-lg-12 col-md-9">
+                        <div className="card o-hidden border-0 shadow-lg my-5">
+                            <div className="card-body p-0">
+                                {/* Nested Row within Card Body */}
+                                <div className="row">
+                                    <div className="col-lg-6 d-none d-lg-block bg-login-image" />
+                                    <div className="col-lg-6">
+                                        <div className="p-5">
+                                            <div className="text-center">
+                                                <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                            </div>
+                                            <form className="user">
+                                                <div className="form-group">
+                                                    <input type="email" className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                </div>
+                                                <div className="form-group">
+                                                    <input type="password" className="form-control form-control-user" id="exampleInputPassword" placeholder="Password" />
+                                                </div>
+                                                <div className="form-group">
+                                                    <div className="custom-control custom-checkbox small">
+                                                        <input type="checkbox" className="custom-control-input" id="customCheck" />
+                                                        <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
+                                                    </div>
+                                                </div>
+                                                <a href="index.html" className="btn btn-primary btn-user btn-block">
+                                                    Login
+                                                </a>
+                                                <hr />
+                                                <a href="index.html" className="btn btn-google btn-user btn-block">
+                                                    <i className="fab fa-google fa-fw" /> Login with Google
+                                                </a>
+                                                <a href="index.html" className="btn btn-facebook btn-user btn-block">
+                                                    <i className="fab fa-facebook-f fa-fw" /> Login with Facebook
+                                                </a>
+                                            </form>
+                                            <hr />
+                                            <div className="text-center">
+                                                <a className="small" href="forgot-password.html">Forgot Password?</a>
+                                            </div>
+                                            <div className="text-center">
+                                                <a className="small" href="register.html">Create an Account!</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <Input
-                                        name="username"
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="username"
-
-                                        value={this.state.username}
-                                        onChange={this.getValueForm}
-                                        validations={[required]}
-                                    />
-
                                 </div>
-                                <div className="input-group form-group">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text"><i className="fas fa-key"></i></span>
-                                    </div>
-                                    <Input
-                                        name="password"
-                                        type="password"
-                                        className="form-control"
-                                        placeholder="password"
-
-                                        value={this.state.password}
-                                        onChange={this.getValueForm}
-                                        validations={[required]}
-                                    />
-                                </div>
-                                <div className="row align-items-center remember">
-                                    <input type="checkbox" />Remember Me
-                                    </div>
-                                <div className="form-group">
-                                    
-                                    <input type="submit"
-                                        value="Login"
-                                        className="btn float-right login_btn" />
-                                </div>
-                                <CheckButton style={{ display: 'none' }} ref={c => { this.checkBtn = c }} />
-                            </Form>
-                        </div>
-                        <div className="card-footer">
-                            <div className="d-flex justify-content-center links">
-                                Don't have an account?<a href="#">Sign Up</a>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <a href="#">Forgot your password?</a>
                             </div>
                         </div>
                     </div>

@@ -1,36 +1,24 @@
-.react-datepicker-wrapper{
-    /* float: left; */
-    width: 92.2%;
-     /* width: -webkit-fill-available; */
-    /*position: absolute; */
-    /* inline-size: -webkit-fill-available; */
-}
-
-.input-group-prepend {
-    place-self: center;
-}
-
-.icon-datepicker{
+.btn-add, .btn-save, .btn-cancel, .btn-remove-file {
+    width: 80px;
     float: right;
-    /* background-color: silver; */
-    /* width: 32px; */
-    /* text-align: center;
-    justify-content: center;
-    display: flex;
-    font-size: xx-large; */
-    /* position: sticky; */
-    /* height: 100%; */
 }
 
-.table{
-    margin-top: 20px;
-}
-
-.btn {
-    width: 73px;
-    float: right;
+.btn-add, .btn-save, .btn-cancel {
+    margin-bottom: 20px;
 }
 
 .btn-cancel {
     margin-right: 20px;
+}
+
+.btn-remove-file, .fileName {
+    margin-top: 40px;
+}
+
+.table-sku {
+    float: left;
+}
+
+.btn-edit, .btn-delete {
+    margin-left: 20%;
 }

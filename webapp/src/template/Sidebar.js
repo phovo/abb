@@ -3,111 +3,90 @@ export default class Sidebar extends Component {
 
     render() {
         return (
-            <aside className="menu-sidebar d-none d-lg-block">
-                <div className="logo">
-                    <a href="#">
-                        <img src="images/icon/logo.png" alt="Cool Admin" />
+            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                {/* Sidebar - Brand */}
+                <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                    <div className="sidebar-brand-icon rotate-n-15">
+                        <i className="fas fa-laugh-wink" />
+                    </div>
+                    <div className="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                </a>
+                {/* Divider */}
+                <hr className="sidebar-divider my-0" />
+                {/* Nav Item - Dashboard */}
+                <li className="nav-item active">
+                    <a className="nav-link" href="index.html">
+                        <i className="fas fa-fw fa-tachometer-alt" />
+                        <span>Dashboard</span></a>
+                </li>
+                {/* Divider */}
+                <hr className="sidebar-divider" />
+                {/* Heading */}
+                <div className="sidebar-heading">
+                    Interface
+                </div>
+                {/* Nav Item - Pages Collapse Menu */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <i className="fas fa-fw fa-cog" />
+                        <span>Components</span>
                     </a>
+                    <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div className="bg-white py-2 collapse-inner rounded">
+                            <h6 className="collapse-header">Custom Components:</h6>
+                            <a className="collapse-item" href="buttons.html">Buttons</a>
+                            <a className="collapse-item" href="cards.html">Cards</a>
+                        </div>
+                    </div>
+                </li>
+                {/* Nav Item - Utilities Collapse Menu */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                        <i className="fas fa-fw fa-wrench" />
+                        <span>Utilities</span>
+                    </a>
+                    <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                        <div className="bg-white py-2 collapse-inner rounded">
+                            <h6 className="collapse-header">Custom Utilities:</h6>
+                            <a className="collapse-item" href="utilities-color.html">Colors</a>
+                            <a className="collapse-item" href="utilities-border.html">Borders</a>
+                            <a className="collapse-item" href="utilities-animation.html">Animations</a>
+                            <a className="collapse-item" href="utilities-other.html">Other</a>
+                        </div>
+                    </div>
+                </li>
+                {/* Divider */}
+                <hr className="sidebar-divider" />
+                {/* Heading */}
+                <div className="sidebar-heading">
+                    Addons
                 </div>
-                <div className="menu-sidebar__content js-scrollbar1">
-                    <nav className="navbar-sidebar">
-                        <ul className="list-unstyled navbar__list">
-                            <li className="active has-sub">
-                                <a className="js-arrow" href="#">
-                                    <i className="fas fa-tachometer-alt" />Dashboard</a>
-                                <ul className="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="index.html">Dashboard 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="index2.html">Dashboard 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="index3.html">Dashboard 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="index4.html">Dashboard 4</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="chart.html">
-                                    <i className="fas fa-chart-bar" />Charts</a>
-                            </li>
-                            <li>
-                                <a href="table.html">
-                                    <i className="fas fa-table" />Tables</a>
-                            </li>
-                            <li>
-                                <a href="form.html">
-                                    <i className="far fa-check-square" />Forms</a>
-                            </li>
-                            <li>
-                                <a href="calendar.html">
-                                    <i className="fas fa-calendar-alt" />Calendar</a>
-                            </li>
-                            <li>
-                                <a href="map.html">
-                                    <i className="fas fa-map-marker-alt" />Maps</a>
-                            </li>
-                            <li className="has-sub">
-                                <a className="js-arrow" href="#">
-                                    <i className="fas fa-copy" />Pages</a>
-                                <ul className="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="login.html">Login</a>
-                                    </li>
-                                    <li>
-                                        <a href="register.html">Register</a>
-                                    </li>
-                                    <li>
-                                        <a href="forget-pass.html">Forget Password</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li className="has-sub">
-                                <a className="js-arrow" href="#">
-                                    <i className="fas fa-desktop" />UI Elements</a>
-                                <ul className="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="button.html">Button</a>
-                                    </li>
-                                    <li>
-                                        <a href="badge.html">Badges</a>
-                                    </li>
-                                    <li>
-                                        <a href="tab.html">Tabs</a>
-                                    </li>
-                                    <li>
-                                        <a href="card.html">Cards</a>
-                                    </li>
-                                    <li>
-                                        <a href="alert.html">Alerts</a>
-                                    </li>
-                                    <li>
-                                        <a href="progress-bar.html">Progress Bars</a>
-                                    </li>
-                                    <li>
-                                        <a href="modal.html">Modals</a>
-                                    </li>
-                                    <li>
-                                        <a href="switch.html">Switchs</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid.html">Grids</a>
-                                    </li>
-                                    <li>
-                                        <a href="fontawesome.html">Fontawesome Icon</a>
-                                    </li>
-                                    <li>
-                                        <a href="typo.html">Typography</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
+                {/* Nav Item - Pages Collapse Menu */}
+                <li className="nav-item">
+                    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                        <i className="fas fa-fw fa-folder" />
+                        <span>Pages</span>
+                    </a>
+                    <div id="collapsePages" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div className="bg-white py-2 collapse-inner rounded">
+                            <h6 className="collapse-header">Login Screens:</h6>
+                            <a className="collapse-item" href="login.html">Login</a>
+                            <a className="collapse-item" href="register.html">Register</a>
+                            <a className="collapse-item" href="forgot-password.html">Forgot Password</a>
+                            <div className="collapse-divider" />
+                            <h6 className="collapse-header">Other Pages:</h6>
+                            <a className="collapse-item" href="404.html">404 Page</a>
+                            <a className="collapse-item" href="blank.html">Blank Page</a>
+                        </div>
+                    </div>
+                </li>
+                {/* Divider */}
+                <hr className="sidebar-divider d-none d-md-block" />
+                {/* Sidebar Toggler (Sidebar) */}
+                <div className="text-center d-none d-md-inline">
+                    <button className="rounded-circle border-0" id="sidebarToggle" />
                 </div>
-            </aside>
+            </ul>
         );
     }
 }
