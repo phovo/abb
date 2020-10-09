@@ -19,7 +19,7 @@ func RunServer() {
 	api := router.Group("/api")
 	{
 		// check author
-		// api.Use(middleware.AuthorizeJWT())
+		api.Use(middleware.AuthorizeJWT())
 		api.GET("/sku", controller.GetSKUs)
 		api.GET("/sku/:id", controller.GetSKU)
 		api.POST("/sku", controller.CreateSKU)
