@@ -1,57 +1,31 @@
 package web
 
 import (
+	"abbp/controller"
 	"abbp/db"
-	"encoding/json"
-	"log"
-	"net/http"
+	"abbp/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
-type App struct {
-	d        db.DB
-	handlers map[string]http.HandlerFunc
-}
+//RunServer port 8080
+func RunServer() {
+	db.ConnectDatabase()
+	router := gin.Default()
+	router.Use(middleware.CORSMiddleware())
+	router.POST("/login", controller.LoginHandle)
+	router.POST("/logout", controller.Logouthandle)
 
-func NewApp(d db.DB, cors bool) App {
-	app := App{
-		d:        d,
-		handlers: make(map[string]http.HandlerFunc),
+	api := router.Group("/api")
+	{
+		// check author
+		// api.Use(middleware.AuthorizeJWT())
+		api.GET("/sku", controller.GetSKUs)
+		api.GET("/sku/:id", controller.GetSKU)
+		api.POST("/sku", controller.CreateSKU)
+		api.PUT("/sku/:id", controller.UpdateSKU)
+		api.DELETE("/sku/:id", controller.DeleteSKU)
 	}
-	techHandler := app.GetTechnologies
-	if !cors {
-		techHandler = disableCors(techHandler)
-	}
-	app.handlers["/api/technologies"] = techHandler
 
-	typeHandler := app.GetTypes
-	if !cors {
-		typeHandler = disableCors(typeHandler)
-	}
-	app.handlers["/api/types"] = typeHandler
-
-	app.handlers["/"] = http.FileServer(http.Dir("/webapp")).ServeHTTP
-	return app
-}
-
-func (a *App) Serve() error {
-	for path, handler := range a.handlers {
-		http.Handle(path, handler)
-	}
-	log.Println("Web server is available on port 8080")
-	return http.ListenAndServe(":8080", nil)
-}
-
-func sendErr(w http.ResponseWriter, code int, message string) {
-	resp, _ := json.Marshal(map[string]string{"error": message})
-	http.Error(w, string(resp), code)
-}
-
-// Needed in order to disable CORS for local development
-func disableCors(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "*")
-		h(w, r)
-	}
+	router.Run(":8080")
 }
