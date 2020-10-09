@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-// import './Login.css';
-import Form from 'react-validation/build/form';
-import Input from 'react-validation/build/input';
-import CheckButton from 'react-validation/build/button';
-import { required } from '../../validation/fucValidation'
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from 'yup'
 
 export default class Login extends Component {
 
@@ -11,35 +8,37 @@ export default class Login extends Component {
         super(props);
         const elementBody = document.getElementById('body');
         elementBody.classList.add("bg-gradient-primary");
-
-        this.state = {
-            username: '',
-            password: ''
-        };
     }
 
-    // getValueForm = (event) => {
-    //     this.setState({
-    //         [event.target.name]: event.target.value
-    //     });
-    // }
+    handleSubmit = (e) => {
+        e.preventDefault();
+    }
 
-    // onSubmit = (e) => {
-    //     e.preventDefault();
-    //     this.form.validateAll();
-    //     if ( this.checkBtn.context._errors.length === 0 ) {
-    //         // compare result after call api here.
-    //         const resultApi = false;
-    //         if (resultApi) {
 
-    //         } else {
-    //             document.getElementById("us_pass_invalid").style.display = 'block';
-    //         }
-    //     }
-    // }
+      validationSchema = Yup.object().shape({
+        username: Yup.string()
+          .email('Invalid email')
+          .required('Required'),
+        password: Yup.string()
+          .required('Required'),
+      });
 
     render() {
         return (
+            <Formik
+                initialValues = {{
+                    username: '',
+                    password: ''
+                }}
+                initialValues={this.initialValues}
+                validate={this.validationSchema}
+                onSubmit={this.handleSubmit}
+            >
+            {(props) => 
+                {
+                const { touched, errors } = props;
+                console.log(errors);
+            return (
             <div className="container">
                 {/* Outer Row */}
                 <div className="row justify-content-center">
@@ -54,22 +53,33 @@ export default class Login extends Component {
                                             <div className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                             </div>
-                                            <form className="user">
+                                            
+                                            <Form className="user">
                                                 <div className="form-group">
-                                                    <input type="email" className="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
+                                                    <Field
+                                                        name='username'
+                                                        type="text" 
+                                                        className="form-control form-control-user" 
+                                                        id="username" 
+                                                        placeholder="Enter Email Address..." />
                                                 </div>
+                                                {touched.username && <ErrorMessage name="username" />}
                                                 <div className="form-group">
-                                                    <input type="password" className="form-control form-control-user" id="exampleInputPassword" placeholder="Password" />
+                                                    <Field
+                                                        name='password' 
+                                                        type="password" 
+                                                        className="form-control form-control-user" 
+                                                        id="exampleInputPassword" 
+                                                        placeholder="Password" />
                                                 </div>
+                                                {touched.password && <ErrorMessage name="password" />}
                                                 <div className="form-group">
                                                     <div className="custom-control custom-checkbox small">
                                                         <input type="checkbox" className="custom-control-input" id="customCheck" />
                                                         <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
                                                     </div>
                                                 </div>
-                                                <a href="index.html" className="btn btn-primary btn-user btn-block">
-                                                    Login
-                                                </a>
+                                                <input type='submit' value='Submit' className="btn btn-primary btn-user btn-block"/>
                                                 <hr />
                                                 <a href="index.html" className="btn btn-google btn-user btn-block">
                                                     <i className="fab fa-google fa-fw" /> Login with Google
@@ -77,7 +87,8 @@ export default class Login extends Component {
                                                 <a href="index.html" className="btn btn-facebook btn-user btn-block">
                                                     <i className="fab fa-facebook-f fa-fw" /> Login with Facebook
                                                 </a>
-                                            </form>
+                                            </Form>
+                                            
                                             <hr />
                                             <div className="text-center">
                                                 <a className="small" href="forgot-password.html">Forgot Password?</a>
@@ -93,6 +104,8 @@ export default class Login extends Component {
                     </div>
                 </div>
             </div>
+            )}}
+            </Formik>
         );
     }
 }
