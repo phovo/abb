@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import './Login.css';
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import * as Yup from 'yup';
+import {RestApi} from '../../api/RestApi'
 
 export default class Login extends Component {
 
@@ -11,7 +13,16 @@ export default class Login extends Component {
     }
 
     handleSubmit = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
+        try {
+            if (false) {
+
+            } else {
+                document.getElementsByClassName('notify-error')[0].style.display='block';
+            }
+        } catch(error) {
+            console.log('failed ', error);
+        }
     }
 
 
@@ -30,15 +41,9 @@ export default class Login extends Component {
                     username: '',
                     password: ''
                 }}
-                initialValues={this.initialValues}
-                validate={this.validationSchema}
+                validationSchema={this.validationSchema}
                 onSubmit={this.handleSubmit}
             >
-            {(props) => 
-                {
-                const { touched, errors } = props;
-                console.log(errors);
-            return (
             <div className="container">
                 {/* Outer Row */}
                 <div className="row justify-content-center">
@@ -53,6 +58,9 @@ export default class Login extends Component {
                                             <div className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                             </div>
+                                            <div className='col-md-12 notify-error'>
+                                                <label> Username or password invalid </label>
+                                            </div>
                                             
                                             <Form className="user">
                                                 <div className="form-group">
@@ -63,7 +71,11 @@ export default class Login extends Component {
                                                         id="username" 
                                                         placeholder="Enter Email Address..." />
                                                 </div>
-                                                {touched.username && <ErrorMessage name="username" />}
+                                                <ErrorMessage name="username">
+                                                        {
+                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
+                                                        }
+                                                    </ErrorMessage>
                                                 <div className="form-group">
                                                     <Field
                                                         name='password' 
@@ -72,7 +84,11 @@ export default class Login extends Component {
                                                         id="exampleInputPassword" 
                                                         placeholder="Password" />
                                                 </div>
-                                                {touched.password && <ErrorMessage name="password" />}
+                                                <ErrorMessage name="password">
+                                                        {
+                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
+                                                        }
+                                                    </ErrorMessage>
                                                 <div className="form-group">
                                                     <div className="custom-control custom-checkbox small">
                                                         <input type="checkbox" className="custom-control-input" id="customCheck" />
@@ -104,7 +120,6 @@ export default class Login extends Component {
                     </div>
                 </div>
             </div>
-            )}}
             </Formik>
         );
     }

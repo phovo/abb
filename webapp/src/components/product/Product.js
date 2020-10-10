@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import TemplateMain from "../../template/TemplateMain";
-// import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import './Product.css';
-// import "react-datepicker/dist/react-datepicker.css";
-// import es from 'date-fns/locale/es';
-// registerLocale('es', es)
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Product extends Component {
 
@@ -48,7 +46,7 @@ export default class Product extends Component {
                     <div className="form-row">
                         <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
                             <label htmlFor="inputEffectiveDate">Effective date(*)</label>
-                            {/* <DatePicker
+                            <DatePicker
                                     selected={this.state.effectiveDate}
                                     onChange={this.getValueEffectiveDate}
                                     type="text"
@@ -56,24 +54,21 @@ export default class Product extends Component {
                                     id="inputEffectiveDate"
                                     name="inputEffectiveDate"
                                     dateFormat="MMMM d, yyyy h:mm aa"
-                                    locale="es"
-                                    aria-describedby="basic-addon2"
-                                /> */}
+                                />
                             <div className="input-group-prepend">
                                 <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
                             </div>
                         </div>
                         <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
                             <label htmlFor="inputExpiredDate">Expired date</label><br />
-                            {/* <DatePicker
+                            <DatePicker
                                     selected={this.state.expiredDate}
                                     onChange={this.getValueExpiredDate}
                                     type="text"
                                     className="form-control datepicker"
                                     id="inputExpiredDate"
                                     name="inputExpiredDate"
-                                    dateFormat="MMMM d, yyyy h:mm aa"
-                                    locale="es" /> */}
+                                    dateFormat="MMMM d, yyyy h:mm aa"/>
                             <div className="input-group-prepend">
                                 <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
                             </div>
