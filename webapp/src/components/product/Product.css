@@ -22,3 +22,12 @@
 .btn-edit, .btn-delete {
     margin-left: 20%;
 }
+
+.react-datepicker-wrapper {
+    inline-size: -webkit-fill-available;
+}
+
+.block-fileName {
+    place-content: flex-end;
+    margin-bottom: 21px;
+}

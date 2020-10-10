@@ -8,11 +8,12 @@ export default class Product extends Component {
 
     constructor(props) {
         super(props);
-        // document.getElementById('body').id = 'page-top';
-        this.state = {
-            effectiveDate: new Date(),
-            expiredDate: new Date()
-        }
+        // document.getElementById('body').id = 'page-top';   
+    }
+
+    state = {
+        effectiveDate: new Date(),
+        expiredDate: new Date()
     }
 
     getValueExpiredDate = (e) => {
@@ -55,9 +56,9 @@ export default class Product extends Component {
                                     name="inputEffectiveDate"
                                     dateFormat="MMMM d, yyyy h:mm aa"
                                 />
-                            <div className="input-group-prepend">
+                            {/* <div className="input-group-prepend">
                                 <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
                             <label htmlFor="inputExpiredDate">Expired date</label><br />
@@ -69,9 +70,9 @@ export default class Product extends Component {
                                     id="inputExpiredDate"
                                     name="inputExpiredDate"
                                     dateFormat="MMMM d, yyyy h:mm aa"/>
-                            <div className="input-group-prepend">
+                            {/* <div className="input-group-prepend">
                                 <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="form-row">
@@ -82,16 +83,23 @@ export default class Product extends Component {
                                 <option value="1">2</option>
                             </select>
                         </div>
-                        <div className="form-group col-lg-1 col-xl-1">
+                        <div className="form-group col-lg-2 col-xl-2">
                             <label htmlFor="inputAttachments">Attachments</label>
-                            <input type="file" className="form-control" id="inputAttachments" />
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input form-control" id="customFile"/>
+                                <label class="custom-file-label form-control" for="customFile">Choose file</label>
+                            </div>
                         </div>
-                        <div className="form-group col-lg-4 col-xl-4">
-                            <label className='fileName'>File Name</label>
+                        <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
+                            {/* <label className='fileName form-control'>File Name</label> */}
+                            <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" disabled='true'/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary form-control" style={{backgroundColor: 'red', color:'white'}}>X</button>
+                            </div>
                         </div>
-                        <div className="form-group col-lg-1 col-xl-1">
+                        {/* <div className="form-group col-lg-1 col-xl-1">
                             <button type="button" class="btn btn-danger btn-remove-file"><span aria-hidden="true">&times;</span></button>
-                        </div>
+                        </div> */}
                     </div>
                     <button type="submit" className="btn btn-primary btn-add">Add</button>
                 </form>
