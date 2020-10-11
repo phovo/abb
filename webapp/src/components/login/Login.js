@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import './Login.css';
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
-import {RestApi} from '../../api/RestApi'
+import RestApi from "../../api/RestApi";
 
 export default class Login extends Component {
 
@@ -13,10 +13,10 @@ export default class Login extends Component {
     }
 
     handleSubmit = (e) => {
-        // e.preventDefault();
+        const response = RestApi.findUserNameAndPassword(e);
         try {
-            if (false) {
-
+            if (response !== null) {
+                
             } else {
                 document.getElementsByClassName('notify-error')[0].style.display='block';
             }
