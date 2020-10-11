@@ -18,6 +18,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 			response.ERROR(c, http.StatusUnauthorized, utils.NO_PERMISSION)
 			c.Abort()
 		}
+		c.Next()
 	}
 }
 

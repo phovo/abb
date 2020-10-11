@@ -15,6 +15,7 @@ func RunServer() {
 	router.Use(middleware.CORSMiddleware())
 	router.POST("/login", controller.LoginHandle)
 	router.POST("/logout", controller.Logouthandle)
+	router.POST("/refresh", controller.RefreshHandle)
 
 	api := router.Group("/api")
 	{
