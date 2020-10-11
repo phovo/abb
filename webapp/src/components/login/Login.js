@@ -25,14 +25,13 @@ export default class Login extends Component {
         }
     }
 
-
-      validationSchema = Yup.object().shape({
+    validationSchema = Yup.object().shape({
         username: Yup.string()
           .email('Invalid email')
           .required('Required'),
         password: Yup.string()
           .required('Required'),
-      });
+    });
 
     render() {
         return (
