@@ -1,25 +1,40 @@
 import React, { Component } from "react";
 import TemplateMain from "../../template/TemplateMain";
-import DatePicker, { registerLocale } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import './Product.css';
 import "react-datepicker/dist/react-datepicker.css";
-import { FastField, Field, Form, Formik } from "formik";
+import { FastField, Form, Formik } from "formik";
 import * as Yup from 'yup';
+import Select from 'react-select';
+// import ProductApis from "../../api/ProductApis/ProductApis";
+// import FileSaver from 'file-saver';
 
 export default class Product extends Component {
 
-    constructor(props) {
-        super(props);
-        // document.getElementById('body').id = 'page-top';   
-    }
+    statusOption = [];
+    typesOption = [];
+    state = {};
 
-    state = {
-        name: '',
-        status: '',
-        effectiveDate: new Date(),
-        expiredDate: new Date(),
-        type: '',
-        attachments: ''
+    constructor(props) {
+        super(props); 
+        this.statusOption = [
+            { value: '1', label: 'Active' },
+            { value: '2', label: 'Inactive' },
+        ];
+
+        this.typesOption = [
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+        ];
+
+        this.state = {
+            name: '',
+            status: '',
+            effectiveDate: new Date(),
+            expiredDate: new Date(),
+            type: '',
+            attachments: null
+        }
     }
 
     getValueExpiredDate = (e) => {
@@ -28,137 +43,195 @@ export default class Product extends Component {
 
     getValueEffectiveDate = (e) => {
         if (e === null) {
-            this.showError('inputEffectiveDate');
+            this.showError(true, 'inputEffectiveDate');
         }
         this.setState({ effectiveDate: e })
     }
 
-    getValuesForm = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
+    getValueStatus = (val) => {
+        console.log(val);
+        if (val !== '') {
+            this.showError(false, 'inputStatus')
+        }
+        this.setState({ status: val })
     }
 
-    showError = (className) => {
-        document.getElementById(className).classList.add('is-invalid');
+    getValueType = (val) => {
+        if (val !== '') {
+            this.showError(false, 'inputType')
+        }
+        this.setState({ type: val })
+    }
+
+    getValueFile = (event) => {
+        const objectFile = event.target.files[0];
+        document.getElementById('showFileName').value = objectFile.name;
+        this.setState({ attachments: objectFile.name });
+    }
+
+    fileUpload(file) {
+        const formData = new FormData();
+        formData.append('file', file)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        return { formData, config };
+    }
+
+    filterValue = (arrayObj) => {
+        const result = [];
+        for (const e of arrayObj) {
+            result.push(e);
+        }
+        return result;
+    }
+
+    showError = (active, IdName) => {
+        if (active) {
+            document.getElementById(IdName).classList.add('is-invalid');
+        } else {
+            document.getElementById(IdName).classList.remove('is-invalid');
+        }
     }
 
     validationSchema = Yup.object().shape({
         name: Yup.string().required(() => {
-            this.showError('inputName');
+            this.showError(true, 'inputName');
+        }),
+        status: Yup.string().oneOf(this.filterValue(this.statusOption)).required(() => {
+            this.showError(true, 'inputStatus');
+        }),
+        type: Yup.string().required(() => {
+            this.showError(true, 'inputType');
         }),
         effectiveDate: Yup.string().required(() => {
-            this.showError('inputEffectiveDate');
+            this.showError(true, 'inputEffectiveDate');
         }),
-      })
+    })
 
-      handleSubmit = (e) => {
-
-      }
+    handleSubmit = (data) => {
+        console.log(data);
+        this.setState({ name: data.name });
+        // try {
+        //     // const product = this.state;
+        //     var file = new File(["Hello, world!"], "hello world.txt", {type: "text/plain;charset=utf-8"});
+        //     console.log(file);
+        //     FileSaver.saveAs(file);
+        // } catch (error) {
+        //     console.log('Failed ', error);
+        // }
+    }
 
     render() {
         return (
             <TemplateMain name={
                 <div>
                     <Formik
-                        initialValues = {{
+                        initialValues={{
+                            name: '',
+                            status: '',
                             effectiveDate: new Date(),
-                            name: ''
+                            expiredDate: new Date(),
+                            type: '',
+                            attachments: null
                         }}
                         validationSchema={this.validationSchema}
                         onSubmit={this.handleSubmit}
                     >
-                    <div className="card shadow mb-4">
-                        <div className="card-header py-3">
-                            <h1 className="m-0 font-weight-bold text-primary" id='title'>Create Product</h1>
-                        </div>
-                        <div className="card-body">
-                            <Form>
-                                <div className="form-row">
-                                    <div className="form-group col-lg-6 col-xl-6">
-                                        <label htmlFor="inputName">Name(*)</label>
-                                        <Field 
-                                            name="name"
-                                            type='text'
-                                            // onChange={this.getValuesForm}
-                                            className="form-control"
-                                            id="inputName"
-                                        />
-                                    </div>
-                                    <div className="form-group col-lg-6 col-xl-6">
-                                        <label htmlFor="inputStatus">Status(*)</label>
-                                        <select onChange={this.getValuesForm} name='status' className="form-control form-control-md">
-                                            <option value="1" selected>Active</option>
-                                            <option value="2">Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
-                                        <label htmlFor="inputEffectiveDate">Effective date(*)</label>
-                                        <DatePicker
-                                            selected={this.state.effectiveDate}
-                                            onChange={this.getValueEffectiveDate}
-                                            type="text"
-                                            className="form-control datepicker"
-                                            id="inputEffectiveDate"
-                                            name="inputEffectiveDate"
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                            // locale="es"
-                                            showTimeSelect
-                                        />
-                                        {/* <div className="input-group-prepend">
-                                        <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
-                                    </div> */}
-                                    </div>
-                                    <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
-                                        <label htmlFor="inputExpiredDate">Expired date</label><br />
-                                        <DatePicker
-                                            selected={this.state.expiredDate}
-                                            onChange={date => this.getValueExpiredDate(date)}
-                                            type="text"
-                                            className="form-control datepicker"
-                                            id="inputExpiredDate"
-                                            name="inputExpiredDate"
-                                            dateFormat="MMMM d, yyyy h:mm aa" 
-                                            // locale="es"
-                                            showTimeSelect
+                        <div className="card shadow mb-4">
+                            <div className="card-header py-3">
+                                <h1 className="m-0 font-weight-bold text-primary" id='title'>Create Product</h1>
+                            </div>
+                            <div className="card-body">
+                                <Form>
+                                    <div className="form-row">
+                                        <div className="form-group col-lg-6 col-xl-6">
+                                            <label htmlFor="inputName">Name(*)</label>
+                                            <FastField
+                                                name="name"
+                                                type='text'
+                                                className="form-control"
+                                                id="inputName"
                                             />
-                                        {/* <div className="input-group-prepend">
+                                        </div>
+                                        <div className="form-group col-lg-6 col-xl-6">
+                                            <label htmlFor="inputStatus">Status(*)</label>
+                                            <Select
+                                                options={this.statusOption}
+                                                onChange={this.getValueStatus}
+                                                name='status'
+                                                id='inputStatus'
+                                                className="form-control form-control-md" />
+                                        </div>
+                                    </div>
+                                    <div className="form-row">
+                                        <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
+                                            <label htmlFor="inputEffectiveDate">Effective date(*)</label>
+                                            <DatePicker
+                                                selected={this.state.effectiveDate}
+                                                onChange={this.getValueEffectiveDate}
+                                                type="text"
+                                                className="form-control datepicker"
+                                                id="inputEffectiveDate"
+                                                name="inputEffectiveDate"
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                showTimeSelect
+                                            />
+                                            {/* <div className="input-group-prepend">
                                         <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
                                     </div> */}
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group col-lg-6 col-xl-6">
-                                        <label htmlFor="inputType">Type(*)</label>
-                                        <select name='type' onChange={this.getValuesForm} className="form-control form-control-md">
-                                            <option value="1" selected>1</option>
-                                            <option value="2">2</option>
-                                        </select>
-                                    </div>
-                                    <div className="form-group col-lg-2 col-xl-2">
-                                        <label htmlFor="inputAttachments">Attachments</label>
-                                        <div className="custom-file">
-                                            <input type="file" className="custom-file-input form-control" id="customFile" />
-                                            <label className="custom-file-label form-control" htmlFor="customFile">Choose file</label>
+                                        </div>
+                                        <div className="input-group input-group-sm mb-3 col-lg-6 col-xl-6">
+                                            <label htmlFor="inputExpiredDate">Expired date</label><br />
+                                            <DatePicker
+                                                selected={this.state.expiredDate}
+                                                onChange={date => this.getValueExpiredDate(date)}
+                                                type="text"
+                                                className="form-control datepicker"
+                                                id="inputExpiredDate"
+                                                name="inputExpiredDate"
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                showTimeSelect
+                                            />
+                                            {/* <div className="input-group-prepend">
+                                        <span className="icon-datepicker input-group-text"><i className="fa fa-calendar-alt" aria-hidden="true"></i></span>
+                                    </div> */}
                                         </div>
                                     </div>
-                                    <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
-                                        {/* <label className='fileName form-control'>File Name</label> */}
-                                        <input type="text" className="form-control" aria-label="Text input with segmented dropdown button" disabled={true}/>
-                                        <div className="input-group-append">
-                                            <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
+                                    <div className="form-row">
+                                        <div className="form-group col-lg-6 col-xl-6">
+                                            <label htmlFor="inputType">Type(*)</label>
+                                            <Select
+                                                id='inputType'
+                                                name='type'
+                                                options={this.typesOption}
+                                                onChange={this.getValueType}
+                                                className="form-control form-control-md" />
                                         </div>
-                                    </div>
-                                    {/* <div className="form-group col-lg-1 col-xl-1">
+                                        <div className="form-group col-lg-2 col-xl-2">
+                                            <label htmlFor="inputAttachments">Attachments</label>
+                                            <div className="custom-file">
+                                                <input type="file" onChange={this.getValueFile} className="custom-file-input form-control" id="customFile" />
+                                                <label className="custom-file-label form-control" htmlFor="customFile">Choose file</label>
+                                            </div>
+                                        </div>
+                                        <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
+                                            {/* <label className='fileName form-control'>File Name</label> */}
+                                            <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
+                                            <div className="input-group-append">
+                                                <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
+                                            </div>
+                                        </div>
+                                        {/* <div className="form-group col-lg-1 col-xl-1">
                                     <button type="button" className="btn btn-danger btn-remove-file"><span aria-hidden="true">&times;</span></button>
                                 </div> */}
-                                </div>
-                                <button type="submit" className="btn btn-primary btn-add">Add</button>
-                            </Form>
+                                    </div>
+                                    <input type="submit" value='submit' className="btn btn-primary btn-add" />
+                                </Form>
+                            </div>
                         </div>
-                    </div>
                     </Formik>
                     <div className="card shadow mb-4 table-sku">
                         <div className="card-header py-3">
@@ -228,26 +301,34 @@ export default class Product extends Component {
                                             <div className="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
                                                 <ul className="pagination">
                                                     <li className="paginate_button page-item previous disabled" id="dataTable_previous">
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={0} tabIndex={0} className="page-link">Previous</a>
                                                     </li>
                                                     <li className="paginate_button page-item active">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={1} tabIndex={0} className="page-link">1</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={2} tabIndex={0} className="page-link">2</a>
                                                     </li><li className="paginate_button page-item ">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={3} tabIndex={0} className="page-link">3</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={4} tabIndex={0} className="page-link">4</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={5} tabIndex={0} className="page-link">5</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={6} tabIndex={0} className="page-link">6</a>
                                                     </li>
                                                     <li className="paginate_button page-item next" id="dataTable_next">
+                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={7} tabIndex={0} className="page-link">Next</a>
                                                     </li>
                                                 </ul>
@@ -259,7 +340,7 @@ export default class Product extends Component {
                         </div>
                     </div>
                 </div>
-                
+
             } />
         );
     }

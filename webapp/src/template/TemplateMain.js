@@ -5,6 +5,8 @@ import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 
 class TemplateMain extends Component {
+
+    // eslint-disable-next-line no-useless-constructor
     constructor(props) {
         super(props);
     }

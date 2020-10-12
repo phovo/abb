@@ -14,10 +14,10 @@ export default class Login extends Component {
     }
 
     handleSubmit = (data) => {
-
         try {
             const response = UserApis.findUserNameAndPassword(data);
             if (response !== null && response !== '') {
+                localStorage.setItem('TOKEM', response);
                 return <Redirect to='/home' />;
             } else {
                 document.getElementsByClassName('notify-error')[0].style.display = 'block';
@@ -25,7 +25,6 @@ export default class Login extends Component {
         } catch (error) {
             console.log('failed ', error);
         }
-
     }
 
     validationSchema = Yup.object().shape({

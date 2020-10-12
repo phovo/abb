@@ -27,6 +27,7 @@ export default class Sidebar extends Component {
                 </div>
                 {/* Nav Item - Pages Collapse Menu */}
                 <li className="nav-item">
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                         <i className="fas fa-fw fa-cog" />
                         <span>Components</span>
@@ -41,6 +42,7 @@ export default class Sidebar extends Component {
                 </li>
                 {/* Nav Item - Utilities Collapse Menu */}
                 <li className="nav-item">
+                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
                         <i className="fas fa-fw fa-wrench" />
                         <span>Utilities</span>
@@ -63,6 +65,7 @@ export default class Sidebar extends Component {
                 </div>
                 {/* Nav Item - Pages Collapse Menu */}
                 <li className="nav-item">
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
                         <i className="fas fa-fw fa-folder" />
                         <span>Pages</span>

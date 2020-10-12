@@ -19,7 +19,6 @@ axiosClient.interceptors.response.use((response) => {
   if (response && response.data) {
     return response.data;
   }
-  console.log('3');
   return response;
 }, (error) => {
   // Handle errors
