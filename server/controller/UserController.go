@@ -8,10 +8,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
 )
 
-var store = sessions.NewCookieStore([]byte(service.SECRET_KEY))
+// var store = sessions.NewCookieStore([]byte(service.SECRET_KEY))
 
 // LoginHandle controller
 func LoginHandle(context *gin.Context) {

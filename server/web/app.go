@@ -26,6 +26,12 @@ func RunServer() {
 		api.POST("/sku", controller.CreateSKU)
 		api.PUT("/sku/:id", controller.UpdateSKU)
 		api.DELETE("/sku/:id", controller.DeleteSKU)
+
+		api.GET("/product", controller.GetProducts)
+		api.GET("/product/:id", controller.GetProduct)
+		api.POST("/product", controller.CreateProduct)
+		api.PUT("/product/:id", controller.UpdateProduct)
+		api.DELETE("/product/:id", controller.DeleteProduct)
 	}
 
 	router.Run(":8080")
