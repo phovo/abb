@@ -12,7 +12,6 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config) => {
-  // Handle token here ...
   return config;
 });
 
@@ -20,7 +19,7 @@ axiosClient.interceptors.response.use((response) => {
   if (response && response.data) {
     return response.data;
   }
-
+  console.log('3');
   return response;
 }, (error) => {
   // Handle errors

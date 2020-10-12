@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+import UserApis from "../../api/UserApis/UserApis";
+import  { Redirect } from 'react-router-dom'
 
 class Logout extends Component {
 
     onClickLogout = () => {
-
+        try {
+            UserApis.logout();
+            localStorage.removeItem("TOKEN");
+            return <Redirect to='/login' />
+        } catch(error) {
+            console.log('failed ', error);
+        }
     }
 
     render() {
