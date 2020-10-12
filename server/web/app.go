@@ -15,11 +15,12 @@ func RunServer() {
 	router.Use(middleware.CORSMiddleware())
 	router.POST("/login", controller.LoginHandle)
 	router.POST("/logout", controller.Logouthandle)
+	router.POST("/refresh", controller.RefreshHandle)
 
 	api := router.Group("/api")
 	{
 		// check author
-		// api.Use(middleware.AuthorizeJWT())
+		api.Use(middleware.AuthorizeJWT())
 		api.GET("/sku", controller.GetSKUs)
 		api.GET("/sku/:id", controller.GetSKU)
 		api.POST("/sku", controller.CreateSKU)

@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"abbp/response"
 	"abbp/service"
-	"fmt"
+	"abbp/utils"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,13 +13,10 @@ import (
 func AuthorizeJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
-		token, err := service.ValidateToken(authHeader)
-		if token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			fmt.Println(claims)
-		} else {
-			fmt.Println(err)
-			c.AbortWithStatus(http.StatusUnauthorized)
+		_, err := service.ValidateToken(authHeader)
+		if err != nil {
+			response.ERROR(c, http.StatusUnauthorized, utils.NO_PERMISSION)
+			c.Abort()
 		}
 		c.Next()
 	}
