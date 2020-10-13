@@ -4,6 +4,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import UserApis from "../../api/UserApis/UserApis";
 import { Redirect } from "react-router-dom";
+import {HOME_URL} from "../../RouterURL/RouterURL";
 
 export default class Login extends Component {
     state = {token: null};
@@ -17,6 +18,7 @@ export default class Login extends Component {
     handleSubmit = (data) =>  {
         const isCheckLogin = async () => {
             try {
+                localStorage.removeItem('TOKEN');
                 const response = await UserApis.findUserNameAndPassword(data);
                 console.log(response);
                 if (response !== undefined) {
@@ -43,7 +45,7 @@ export default class Login extends Component {
 
     render() {
         if (this.state.token !== null) {
-            return(<Redirect to='/home' />);
+            return(<Redirect to={HOME_URL} />);
         }
         return (
             <Formik

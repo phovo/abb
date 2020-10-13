@@ -8,7 +8,9 @@ import { PrivateRoute } from './PrivateRoute';
 
 const LOGIN_URL = '/login';
 const HOME_URL = ['/', '/home'];
-const PRODUCT_URL = '/product';
+const PRODUCT_URL = '/create-product';
+
+export {LOGIN_URL, HOME_URL, PRODUCT_URL};
 
 class RouterURL extends Component {
 
