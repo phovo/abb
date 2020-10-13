@@ -17,6 +17,7 @@ export default class Product extends Component {
 
     constructor(props) {
         super(props);
+        console.log(new Date());
         this.statusOption = [
             { value: '1', label: 'Active' },
             { value: '2', label: 'Inactive' },
@@ -38,6 +39,7 @@ export default class Product extends Component {
     }
 
     getValueExpiredDate = (e) => {
+        console.log();
         this.setState({ expiredDate: moment(e).format() })
     }
 
@@ -45,7 +47,7 @@ export default class Product extends Component {
         if (e === null) {
             this.showError(true, 'inputEffectiveDate');
         }
-        this.setState({ effectiveDate: moment(e).format() })
+        this.setState({ effectiveDate: e })
     }
 
     getValueStatus = (obj) => {
