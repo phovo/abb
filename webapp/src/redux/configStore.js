@@ -1,8 +1,10 @@
-import { combineReducers,createStore } from "redux";
+import { applyMiddleware,combineReducers,createStore } from "redux";
 import ReducerSKU from './reducer/ReducerSKU';
+import UserReducer from './reducer/UserReducer';
 
 const rootReducer = combineReducers({
-    ReducerSKU
+    ReducerSKU,
+    UserReducer
 })
 
 const store = createStore(rootReducer);

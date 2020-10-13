@@ -3,34 +3,53 @@ import React, { Component } from "react";
 import './Login.css';
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
-import {RestApi} from '../../api/RestApi'
+import UserApis from "../../api/UserApis/UserApis";
+import { Redirect } from "react-router-dom";
+import {connect} from 'react-redux'
+import { LoginAction } from "../../redux/action/UserAction";
+import { userLogin } from "../../settings/config";
 
 
-export default class Login extends Component {
+class Login extends Component {
+    state = {token: null};
+    
+    constructor(props) {
+        super(props);
+        const elementBody = document.getElementById('body');
+        elementBody.classList.add("bg-gradient-primary");
+    }
 
-
-    handleSubmit = (e) => {
-        // e.preventDefault();
-        try {
-            if (false) {
-
-            } else {
-                document.getElementsByClassName('notify-error')[0].style.display='block';
-            }
-        } catch(error) {
-            console.log('failed ', error);
-        }
+    handleSubmit = (data) =>  {
+        // const isCheckLogin = async () => {
+        //     try {
+        //         const response = await UserApis.findUserNameAndPassword(data);
+        //         console.log(response);
+        //         if (response !== undefined) {
+        //             localStorage.setItem('TOKEN', response); // save token in localstorage
+        //             this.setState({token: response});
+        //         } else {
+        //             document.getElementsByClassName('notify-error')[0].style.display = 'block';
+        //         }
+        //     } catch (error) {
+        //         console.log('failed ', error);
+        //         document.getElementsByClassName('notify-error')[0].style.display = 'block';
+        //     } 
+        // }
+        // isCheckLogin();
+        
     }
 
     validationSchema = Yup.object().shape({
-        username: Yup.string()
-          .email('Invalid email')
-          .required('Required'),
+        // username: Yup.string()
+        //     .required('Required'),
         password: Yup.string()
-          .required('Required'),
+            .required('Required'),
     });
 
     render() {
+        if (this.state.token !== null) {
+            return(<Redirect to='/home' />);
+        }
         return (
             <Formik
                 initialValues={{
@@ -40,51 +59,57 @@ export default class Login extends Component {
                 validationSchema={this.validationSchema}
                 onSubmit={this.handleSubmit}
             >
-            <div className="container">
-                {/* Outer Row */}
-                <div className="row justify-content-center">
-                    <div className="col-xl-10 col-lg-12 col-md-9">
-                        <div className="card o-hidden border-0 shadow-lg my-5">
-                            <div className="card-body p-0">
-                                {/* Nested Row within Card Body */}
-                                <div className="row">
-                                    <div className="col-lg-6 d-none d-lg-block bg-login-image" />
-                                    <div className="col-lg-6">
-                                        <div className="p-5">
-                                            <div className="text-center">
-                                                <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                            </div>
-                                            <div className='col-md-12 notify-error'>
-                                                <label> Username or password invalid </label>
-                                            </div>
-                                            
-                                            <Form className="user">
-                                                <div className="form-group">
-                                                    <Field
-                                                        name='username'
-                                                        type="text" 
-                                                        className="form-control form-control-user" 
-                                                        id="username" 
-                                                        placeholder="Enter Email Address..." />
+                <div className="container">
+                    {/* Outer Row */}
+                    <div className="row justify-content-center">
+                        <div className="col-xl-10 col-lg-12 col-md-9">
+                            <div className="card o-hidden border-0 shadow-lg my-5">
+                                <div className="card-body p-0">
+                                    {/* Nested Row within Card Body */}
+                                    <div className="row">
+                                        <div className="col-lg-6 d-none d-lg-block bg-login-image" />
+                                        <div className="col-lg-6">
+                                            <div className="p-5">
+                                                <div className="text-center">
+                                                    <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                                 </div>
-                                                <ErrorMessage name="username">
+                                                <div className='col-md-12 notify-error'>
+                                                    <label> Username or password invalid </label>
+                                                </div>
+
+                                                <Form className="user">
+                                                    <div className="form-group">
+                                                        <Field
+                                                            name='username'
+                                                            type="text"
+                                                            className="form-control form-control-user"
+                                                            id="username"
+                                                            placeholder="Enter Email Address..." />
+                                                    </div>
+                                                    {/* <ErrorMessage name="username">
                                                         {
-                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
+                                                            (err) => <div className="text text-danger validate-input" style={{ fontSize: '16px' }}>{err}</div>
+                                                        }
+                                                    </ErrorMessage> */}
+                                                    <div className="form-group">
+                                                        <Field
+                                                            name='password'
+                                                            type="password"
+                                                            className="form-control form-control-user"
+                                                            id="exampleInputPassword"
+                                                            placeholder="Password" />
+                                                    </div>
+                                                    <ErrorMessage name="password">
+                                                        {
+                                                            (err) => <div className="text text-danger validate-input" style={{ fontSize: '16px' }}>{err}</div>
                                                         }
                                                     </ErrorMessage>
-                                                <div className="form-group">
-                                                    <Field
-                                                        name='password' 
-                                                        type="password" 
-                                                        className="form-control form-control-user" 
-                                                        id="exampleInputPassword" 
-                                                        placeholder="Password" />
-                                                </div>
-                                                <ErrorMessage name="password">
-                                                        {
-                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
-                                                        }
-                                                    </ErrorMessage>
+                                                    <div className="form-group">
+                                                        <div className="custom-control custom-checkbox small">
+                                                            <input type="checkbox" className="custom-control-input" id="customCheck" />
+                                                            <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
+                                                        </div>
+                                                    </div>
                                                     <input type='submit' value='Submit' className="btn btn-primary btn-user btn-block" />
                                                     <hr />
                                                     <a href="index.html" className="btn btn-google btn-user btn-block">
@@ -113,3 +138,14 @@ export default class Login extends Component {
         )
     }
 }
+const mapStateToProps= state =>{
+    return {
+        userLogin: state.UserReducer.userLogin
+}}
+const mapDispatchToProps= dispatch =>{
+    return 
+        dispatch(LoginAction())
+        
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login)

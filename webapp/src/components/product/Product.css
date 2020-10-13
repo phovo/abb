@@ -31,3 +31,15 @@
     place-content: flex-end;
     margin-bottom: 21px;
 }
+
+.form-control {
+    padding: 0px;
+}
+
+.is-invalid {
+    padding-right: 0px !important;
+}
+
+#inputType, #inputStatus {
+    /* border: aliceblue; */
+}

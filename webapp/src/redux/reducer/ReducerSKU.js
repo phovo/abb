@@ -4,7 +4,7 @@ const initialState = {
     ListSKU : []
 }
 
-export default (state = initialState, action) => {
+const ReducerSKU = (state = initialState, action) => {
     switch (action.type) {
 
     case ADD_SKU:
@@ -25,3 +25,5 @@ export default (state = initialState, action) => {
         return state
     }
 }
+
+export default ReducerSKU
