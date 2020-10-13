@@ -11,5 +11,7 @@ require (
 	github.com/gorilla/sessions v1.1.3
 	github.com/jinzhu/gorm v1.9.16
 	github.com/lib/pq v1.8.0
+	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
+	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/http-swagger v0.0.0-20200308142732-58ac5e232fba
 )

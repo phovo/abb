@@ -6,6 +6,7 @@ import (
 	"abbp/model"
 	"math"
 	"strconv"
+	"strings"
 )
 
 // CreateSKU returns a new SKU created or an error
@@ -93,8 +94,9 @@ func GetSKUs(page, size, textSearch string) dto.OperationResult {
 		db.DB.Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
 		db.DB.Model(SKUs).Count(&totalItem)
 	} else {
-		db.DB.Where("name LIKE ?", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
-		db.DB.Model(SKUs).Where("name LIKE ?", textSearch+"%").Count(&totalItem)
+		textSearch = strings.ToLower(textSearch)
+		db.DB.Where("lower(name) LIKE ? OR lower(description) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+		db.DB.Model(SKUs).Where("lower(name) LIKE ? OR lower(description) LIKE ?", textSearch+"%", textSearch+"%").Count(&totalItem)
 	}
 
 	totalPage = int(math.Ceil(float64(totalItem) / float64(sizeNumber)))

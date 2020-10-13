@@ -5,7 +5,6 @@ import (
 	"abbp/db"
 	"abbp/middleware"
 
-	_ "github.com/PrinceNorin/todo-go/docs"
 	"github.com/gin-gonic/gin"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
