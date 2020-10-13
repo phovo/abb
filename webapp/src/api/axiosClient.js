@@ -5,13 +5,18 @@ import queryString from 'query-string';
 // Please have a look at here `https://github.com/axios/axios#request- config` for the full list of configs
 const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL_DEV,
-  // headers: {
-  //   'content-type': 'application/json',
-  // },
+  headers: {
+    'content-type': 'application/json',
+  },
   paramsSerializer: params => queryString.stringify(params),
 });
 
 axiosClient.interceptors.request.use(async (config) => {
+  if (localStorage.getItem("TOKEN") !== null) {
+    config.headers['token'] =  localStorage.getItem("TOKEN");
+  }
+  
+  console.log(config);
   return config;
 });
 
