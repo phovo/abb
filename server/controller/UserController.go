@@ -31,7 +31,7 @@ func LoginHandle(context *gin.Context) {
 
 // Logouthandle controller
 func Logouthandle(context *gin.Context) {
-	// set time out cho token
+	// set time out token
 	authHeader := context.GetHeader("Authorization")
 
 	_, err := service.ValidateToken(authHeader)
@@ -39,10 +39,13 @@ func Logouthandle(context *gin.Context) {
 		response.ERROR(context, http.StatusUnauthorized, utils.NO_PERMISSION)
 		return
 	}
-
+	result := service.SetTimeOutJWT(authHeader)
+	if !result {
+		return
+	}
+	response.JSON(context, http.StatusOK, "logout ok....")
 }
 
-// check lai timeout
 // RefreshHandle controller
 func RefreshHandle(context *gin.Context) {
 	authHeader := context.GetHeader("Authorization")

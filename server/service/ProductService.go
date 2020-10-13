@@ -19,7 +19,7 @@ func CreateProduct(product model.Product) dto.OperationResult {
 }
 
 // GetProducts get all
-func GetProducts(page, size string) dto.OperationResult {
+func GetProducts(page, size, textSearch string) dto.OperationResult {
 
 	pageNumber, _ := strconv.Atoi(page)
 	sizeNumber, _ := strconv.Atoi(size)
@@ -28,7 +28,7 @@ func GetProducts(page, size string) dto.OperationResult {
 	var pagination dto.Pagenation
 	var offset, totalItem, totalPage int
 
-	db.DB.Model(products).Count(&totalItem)
+	// db.DB.Model(products).Count(&totalItem)
 
 	if pageNumber < 1 {
 		pageNumber = 1
@@ -42,7 +42,14 @@ func GetProducts(page, size string) dto.OperationResult {
 	} else {
 		offset = (pageNumber - 1) * sizeNumber
 	}
-	db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+	if textSearch == "" {
+		db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+		db.DB.Model(products).Count(&totalItem)
+	} else {
+		db.DB.Where("name LIKE ?", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+		db.DB.Model(products).Where("name LIKE ?", textSearch+"%").Count(&totalItem)
+	}
+	// db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
 	totalPage = int(math.Ceil(float64(totalItem) / float64(sizeNumber)))
 
 	pagination.Items = products

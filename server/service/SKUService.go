@@ -68,7 +68,7 @@ func GetSKU(id string) dto.OperationResult {
 }
 
 // GetSKUs get all
-func GetSKUs(page, size string) dto.OperationResult {
+func GetSKUs(page, size, textSearch string) dto.OperationResult {
 
 	pageNumber, _ := strconv.Atoi(page)
 	sizeNumber, _ := strconv.Atoi(size)
@@ -76,8 +76,6 @@ func GetSKUs(page, size string) dto.OperationResult {
 	var SKUs []model.SKU
 	var pagination dto.Pagenation
 	var offset, totalItem, totalPage int
-
-	db.DB.Model(SKUs).Count(&totalItem)
 
 	if pageNumber < 1 {
 		pageNumber = 1
@@ -91,7 +89,14 @@ func GetSKUs(page, size string) dto.OperationResult {
 	} else {
 		offset = (pageNumber - 1) * sizeNumber
 	}
-	db.DB.Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+	if textSearch == "" {
+		db.DB.Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+		db.DB.Model(SKUs).Count(&totalItem)
+	} else {
+		db.DB.Where("name LIKE ?", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+		db.DB.Model(SKUs).Where("name LIKE ?", textSearch+"%").Count(&totalItem)
+	}
+
 	totalPage = int(math.Ceil(float64(totalItem) / float64(sizeNumber)))
 
 	pagination.Items = SKUs

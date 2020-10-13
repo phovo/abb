@@ -30,7 +30,8 @@ func CreateProduct(context *gin.Context) {
 func GetProducts(context *gin.Context) {
 	page := context.DefaultQuery("page", utils.PAGE_DEFAULT)
 	size := context.DefaultQuery("size", utils.SIZE_DEFAULT)
-	operationResult := service.GetProducts(page, size)
+	textSearch := context.DefaultQuery("textSearch", utils.VALUE_EMPTY)
+	operationResult := service.GetProducts(page, size, textSearch)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.NOT_FOUND_ENTITY)
 		return

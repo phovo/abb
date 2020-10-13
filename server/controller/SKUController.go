@@ -35,7 +35,8 @@ func CreateSKU(context *gin.Context) {
 func GetSKUs(context *gin.Context) {
 	page := context.DefaultQuery("page", utils.PAGE_DEFAULT)
 	size := context.DefaultQuery("size", utils.SIZE_DEFAULT)
-	operationResult := service.GetSKUs(page, size)
+	textSearch := context.DefaultQuery("textSearch", utils.VALUE_EMPTY)
+	operationResult := service.GetSKUs(page, size, textSearch)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.NOT_FOUND_ENTITY)
 		return
@@ -87,3 +88,22 @@ func DeleteSKU(context *gin.Context) {
 	}
 	response.JSON(context, http.StatusOK, operationResult.Result)
 }
+
+// func TestPage(context *gin.Context) {
+// 	// limit := 10
+// 	// page := 1
+// 	// sort := "name asc"
+// 	// var searchs []dto.Search
+// 	// get current url path
+// 	query := context.Request.URL.Query()
+// 	for _, value := range query {
+// 		queryValue := value[len(value)-1]
+// 		fmt.Println(queryValue)
+// 	}
+// 	// search query params
+// 	// searchQueryParams := ""
+// 	// for _, search := range []dto.Search {
+// 	// 	// fmt.Sprintf("&%s.%s=%s", search.Column, search.Action, search.Query)
+// 	// 	// searchQueryParams += String.form "&%s.%s=%s", search.Column, search.Action, search.Query)
+// 	// }
+// }
