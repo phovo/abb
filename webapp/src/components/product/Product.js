@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import Select from 'react-select';
 import moment from 'moment';
 import ProductApis from "../../api/ProductApis/ProductApis";
+import SKUApis from "../../api/SKUApis/SKUApis";
 export default class Product extends Component {
 
     statusOption = [];
@@ -36,6 +37,7 @@ export default class Product extends Component {
         };
     }
 
+    // PART CREATE PRODUCT
     getValueExpiredDate = (e) => {
         this.setState({ expiredDate: e })
     }
@@ -116,14 +118,6 @@ export default class Product extends Component {
                     if (response !== null) {
                         alert("Success");
                     }
-                    // console.log(this.state);
-                    // Axios.post('http://52.77.251.144:8080/api/product', this.state)
-                    // .then(function (response) {
-                    //     console.log(response);
-                    // })
-                    // .catch(function (error) {
-                    //     console.log(error);
-                    // });
                 } catch (error) {
                     console.log('Failed ', error);
                     alert('Failed');
@@ -134,6 +128,24 @@ export default class Product extends Component {
             console.log('form invalid');
         }
     }
+    // END OF PART CREATE PRODUCT
+
+    // PART EDIT SKU
+    onClickEditSKU = (id) => {
+        const getSKUById = async() => {
+            try {
+                const response = SKUApis.getSKUById(id);
+                if (response !== null) {
+
+                }
+            } catch (error) {
+                console.log('failed');
+            }
+        }
+        getSKUById();
+    }
+    // END OF PART EDIT SKU
+
 
     render() {
         return (
