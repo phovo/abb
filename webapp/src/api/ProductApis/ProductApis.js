@@ -3,7 +3,7 @@ import axiosClient from "../axiosClient";
 const PATH_API = 'api';
 
 const ProductApis = {
-    CreateProduct: (product) => {
+    createProduct: (product) => {
         const url = `${PATH_API}/product`;
         return axiosClient.post(url, product);
     },

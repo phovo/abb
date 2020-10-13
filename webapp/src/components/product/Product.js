@@ -6,9 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FastField, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select';
-// import ProductApis from "../../api/ProductApis/ProductApis";
-import Axios from "axios";
 import moment from 'moment';
+import ProductApis from "../../api/ProductApis/ProductApis";
 export default class Product extends Component {
 
     statusOption = [];
@@ -17,7 +16,6 @@ export default class Product extends Component {
 
     constructor(props) {
         super(props);
-        console.log(new Date());
         this.statusOption = [
             { value: '1', label: 'Active' },
             { value: '2', label: 'Inactive' },
@@ -35,12 +33,11 @@ export default class Product extends Component {
             expiredDate: new Date(),
             type: '',
             attachments: null
-        }
+        };
     }
 
     getValueExpiredDate = (e) => {
-        console.log();
-        this.setState({ expiredDate: moment(e).format() })
+        this.setState({ expiredDate: e })
     }
 
     getValueEffectiveDate = (e) => {
@@ -100,7 +97,7 @@ export default class Product extends Component {
     })
 
     handleSubmit = (data) => {
-        console.log(this.state.status);
+        console.log(moment());
         if (data.name !== '' && this.state.status !== '' && this.state.effectiveDate !== null && this.state.type !== '') {
             this.showError(false, 'inputName');
             this.showError(false, 'inputStatus');
@@ -111,19 +108,25 @@ export default class Product extends Component {
                 name: data.name, 
                 attachments: null });
             
-            // call apa create product
+            // call api create product
             const createProduct = async () => {
                 try {
-                    console.log(this.state);
-                    Axios.post('http://52.77.251.144:8080/api/product', this.state)
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                    const product = this.state;
+                    const response = ProductApis.createProduct(product);
+                    if (response !== null) {
+                        alert("Success");
+                    }
+                    // console.log(this.state);
+                    // Axios.post('http://52.77.251.144:8080/api/product', this.state)
+                    // .then(function (response) {
+                    //     console.log(response);
+                    // })
+                    // .catch(function (error) {
+                    //     console.log(error);
+                    // });
                 } catch (error) {
                     console.log('Failed ', error);
+                    alert('Failed');
                 }
             }
             createProduct();
@@ -249,7 +252,7 @@ export default class Product extends Component {
                         </div>
                         <div className="card-body">
                             <div className="table-responsive">
-                                <div id="dataTable_wrapper" className="dataTables_wrapper dt-bootstrap4"><div className="row"><div className="col-sm-12 col-md-6"><div className="dataTables_length" id="dataTable_length"><label>Show <select name="dataTable_length" aria-controls="dataTable" className="custom-select custom-select-sm form-control form-control-sm"><option value={10}>10</option><option value={25}>25</option><option value={50}>50</option><option value={100}>100</option></select> entries</label></div></div><div className="col-sm-12 col-md-6"><div id="dataTable_filter" className="dataTables_filter"><label>Search:<input type="search" className="form-control form-control-sm" placeholder aria-controls="dataTable" /></label></div></div></div><div className="row"><div className="col-sm-12"><table className="table table-bordered dataTable" id="dataTable" width="100%" cellSpacing={0} role="grid" aria-describedby="dataTable_info" style={{ width: '100%' }}>
+                                <div id="dataTable_wrapper" className="dataTables_wrapper dt-bootstrap4"><div className="row"><div className="col-sm-12 col-md-6"><div className="dataTables_length" id="dataTable_length"><label>Show <select name="dataTable_length" aria-controls="dataTable" className="custom-select custom-select-sm form-control form-control-sm"><option value={10}>10</option><option value={25}>25</option><option value={50}>50</option><option value={100}>100</option></select> entries</label></div></div><div className="col-sm-12 col-md-6"><div id="dataTable_filter" className="dataTables_filter"><label>Search:<input type="search" className="form-control form-control-sm" aria-controls="dataTable" /></label></div></div></div><div className="row"><div className="col-sm-12"><table className="table table-bordered dataTable" id="dataTable" width="100%" cellSpacing={0} role="grid" aria-describedby="dataTable_info" style={{ width: '100%' }}>
                                     <thead>
                                         <tr role="row">
                                             <th className="sorting_asc" tabIndex={0} aria-controls="dataTable" rowSpan={1} colSpan={1} aria-label="Name: activate to sort column descending" aria-sort="ascending" style={{ width: '400px' }}>Name</th>
