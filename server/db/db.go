@@ -3,7 +3,6 @@ package db
 import (
 	"abbp/model"
 	"log"
-	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq" // import driver postgress
@@ -47,10 +46,10 @@ func ConnectDatabase() {
 func dataSource() string {
 	host := "localhost"
 	pass := "abb123"
-	if os.Getenv("profile") == "prod" {
-		host = "db"
-		pass = os.Getenv("db_pass")
-	}
+	// if os.Getenv("profile") == "prod" {
+	// 	host = "db"
+	// 	pass = os.Getenv("db_pass")
+	// }
 	return "postgresql://" + host + ":5432/abb" +
 		"?user=abb&sslmode=disable&password=" + pass
 }
