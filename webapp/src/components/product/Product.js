@@ -7,8 +7,8 @@ import { FastField, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Select from 'react-select';
 // import ProductApis from "../../api/ProductApis/ProductApis";
-// import FileSaver from 'file-saver';
-
+import Axios from "axios";
+import moment from 'moment';
 export default class Product extends Component {
 
     statusOption = [];
@@ -16,7 +16,7 @@ export default class Product extends Component {
     state = {};
 
     constructor(props) {
-        super(props); 
+        super(props);
         this.statusOption = [
             { value: '1', label: 'Active' },
             { value: '2', label: 'Inactive' },
@@ -38,54 +38,40 @@ export default class Product extends Component {
     }
 
     getValueExpiredDate = (e) => {
-        this.setState({ expiredDate: e })
+        this.setState({ expiredDate: moment(e).format() })
     }
 
     getValueEffectiveDate = (e) => {
         if (e === null) {
             this.showError(true, 'inputEffectiveDate');
         }
-        this.setState({ effectiveDate: e })
+        this.setState({ effectiveDate: moment(e).format() })
     }
 
-    getValueStatus = (val) => {
-        console.log(val);
-        if (val !== '') {
+    getValueStatus = (obj) => {
+        if (obj.value !== undefined) {
             this.showError(false, 'inputStatus')
         }
-        this.setState({ status: val })
+        this.setState({ status: obj.value })
     }
 
-    getValueType = (val) => {
-        if (val !== '') {
+    getValueType = (obj) => {
+        if (obj.value !== undefined) {
             this.showError(false, 'inputType')
         }
-        this.setState({ type: val })
+        this.setState({ type: obj.value })
     }
 
     getValueFile = (event) => {
         const objectFile = event.target.files[0];
         document.getElementById('showFileName').value = objectFile.name;
-        this.setState({ attachments: objectFile.name });
+        this.setState({ attachments: objectFile });
     }
 
-    fileUpload(file) {
+    fileUpload() {
         const formData = new FormData();
-        formData.append('file', file)
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }
-        return { formData, config };
-    }
-
-    filterValue = (arrayObj) => {
-        const result = [];
-        for (const e of arrayObj) {
-            result.push(e);
-        }
-        return result;
+        formData.append('file', this.state.attachments, this.state.attachments.name);
+        return formData;
     }
 
     showError = (active, IdName) => {
@@ -100,7 +86,7 @@ export default class Product extends Component {
         name: Yup.string().required(() => {
             this.showError(true, 'inputName');
         }),
-        status: Yup.string().oneOf(this.filterValue(this.statusOption)).required(() => {
+        status: Yup.string().required(() => {
             this.showError(true, 'inputStatus');
         }),
         type: Yup.string().required(() => {
@@ -112,16 +98,36 @@ export default class Product extends Component {
     })
 
     handleSubmit = (data) => {
-        console.log(data);
-        this.setState({ name: data.name });
-        // try {
-        //     // const product = this.state;
-        //     var file = new File(["Hello, world!"], "hello world.txt", {type: "text/plain;charset=utf-8"});
-        //     console.log(file);
-        //     FileSaver.saveAs(file);
-        // } catch (error) {
-        //     console.log('Failed ', error);
-        // }
+        console.log(this.state.status);
+        if (data.name !== '' && this.state.status !== '' && this.state.effectiveDate !== null && this.state.type !== '') {
+            this.showError(false, 'inputName');
+            this.showError(false, 'inputStatus');
+            this.showError(false, 'inputType');
+            this.showError(false, 'inputEffectiveDate');
+
+            this.setState({ 
+                name: data.name, 
+                attachments: null });
+            
+            // call apa create product
+            const createProduct = async () => {
+                try {
+                    console.log(this.state);
+                    Axios.post('http://52.77.251.144:8080/api/product', this.state)
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                } catch (error) {
+                    console.log('Failed ', error);
+                }
+            }
+            createProduct();
+        } else {
+            console.log('form invalid');
+        }
     }
 
     render() {
@@ -175,7 +181,7 @@ export default class Product extends Component {
                                                 type="text"
                                                 className="form-control datepicker"
                                                 id="inputEffectiveDate"
-                                                name="inputEffectiveDate"
+                                                name="effectiveDate"
                                                 dateFormat="MMMM d, yyyy h:mm aa"
                                                 showTimeSelect
                                             />
@@ -191,7 +197,7 @@ export default class Product extends Component {
                                                 type="text"
                                                 className="form-control datepicker"
                                                 id="inputExpiredDate"
-                                                name="inputExpiredDate"
+                                                name="expiredDate"
                                                 dateFormat="MMMM d, yyyy h:mm aa"
                                                 showTimeSelect
                                             />
@@ -305,30 +311,30 @@ export default class Product extends Component {
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={0} tabIndex={0} className="page-link">Previous</a>
                                                     </li>
                                                     <li className="paginate_button page-item active">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={1} tabIndex={0} className="page-link">1</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={2} tabIndex={0} className="page-link">2</a>
                                                     </li><li className="paginate_button page-item ">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={3} tabIndex={0} className="page-link">3</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={4} tabIndex={0} className="page-link">4</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={5} tabIndex={0} className="page-link">5</a>
                                                     </li>
                                                     <li className="paginate_button page-item ">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={6} tabIndex={0} className="page-link">6</a>
                                                     </li>
                                                     <li className="paginate_button page-item next" id="dataTable_next">
-                                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                                         <a href="#" aria-controls="dataTable" data-dt-idx={7} tabIndex={0} className="page-link">Next</a>
                                                     </li>
                                                 </ul>

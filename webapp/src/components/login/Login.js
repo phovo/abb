@@ -20,7 +20,7 @@ export default class Login extends Component {
                 const response = await UserApis.findUserNameAndPassword(data);
                 console.log(response);
                 if (response !== undefined) {
-                    localStorage.setItem('TOKEM', response); // save token in localstorage
+                    localStorage.setItem('TOKEN', response); // save token in localstorage
                     this.setState({token: response});
                 } else {
                     document.getElementsByClassName('notify-error')[0].style.display = 'block';

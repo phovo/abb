@@ -14,9 +14,9 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   if (localStorage.getItem("TOKEN") !== null) {
     config.headers['token'] =  localStorage.getItem("TOKEN");
+  } else {
+    console.log('Token expires');
   }
-  
-  console.log(config);
   return config;
 });
 
