@@ -56,35 +56,30 @@ func RefreshToken(myToken string) string {
 	_, err := jwt.ParseWithClaims(myToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SECRET_KEY), nil
 	})
-	fmt.Println("==========T1")
-	// if time.Unix(claims.ExpiresAt, 0).Sub(time.Now()) > 30*time.Second {
-	// 	return ""
-	// }
-	fmt.Println("==========T2")
-	expirationTime := time.Now().Add(0 * time.Minute)
+	expirationTime := time.Now().Add(5 * time.Minute)
 	claims.ExpiresAt = expirationTime.Unix()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(SECRET_KEY))
 	if err != nil {
 		return ""
 	}
-	fmt.Println("==========T3")
 	return tokenString
 }
 
 // SetTimeOutJWT logout
-func SetTimeOutJWT(myToken string) {
-	// claims := &authCustomClaims{}
-	// _, err := jwt.ParseWithClaims(myToken, claims, func(token *jwt.Token) (interface{}, error) {
-	// 	return []byte(SECRET_KEY), nil
-	// })
-	// if err != nil {
-	// 	return false
-	// }
-	// expirationTime := time.Now().Add(0 * time.Minute)
-	// claims.ExpiresAt = expirationTime.Unix()
-	// token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// tokenString, err := token.SignedString([]byte(SECRET_KEY))
+func SetTimeOutJWT(myToken string) bool {
+	claims := &authCustomClaims{}
+	_, err := jwt.ParseWithClaims(myToken, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SECRET_KEY), nil
+	})
+	if err != nil {
+		return false
+	}
+	claims.ExpiresAt = time.Now().Unix()
 
-	// return true
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	myToken, _ = token.SignedString([]byte(SECRET_KEY))
+
+	return true
 }
