@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/PrinceNorin/todo-go/docs"
 	"github.com/gin-gonic/gin"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 //RunServer port 8080
@@ -17,7 +18,6 @@ func RunServer() {
 	router.POST("/login", controller.LoginHandle)
 	router.POST("/logout", controller.Logouthandle)
 	router.POST("/refresh", controller.RefreshHandle)
-	router.GET("/test", controller.TestPage)
 
 	api := router.Group("/api")
 	{
@@ -36,5 +36,11 @@ func RunServer() {
 		api.DELETE("/product/:id", controller.DeleteProduct)
 	}
 
+	router.GET("/swagger/*any", Swagger)
 	router.Run(":8080")
+}
+
+// Swagger api
+func Swagger(c *gin.Context) {
+	httpSwagger.WrapHandler(c.Writer, c.Request)
 }
