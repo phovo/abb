@@ -4,8 +4,8 @@ const PATH_API = 'api';
 
 const SKUApis = {
     getSKUById: (id) => {
-        const url = `${PATH_API}/sku`;
-        return axiosClient.get(url, id);
+        const url = 'api/sku';
+        return axiosClient.get(url+ '/' +id);
     },
     updateSKUById: (sku) => {
         const url = `${PATH_API}/sku/${sku.id}`;

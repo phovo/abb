@@ -8,7 +8,9 @@ import * as Yup from 'yup';
 import Select from 'react-select';
 import moment from 'moment';
 import ProductApis from "../../api/ProductApis/ProductApis";
-import SKUApis from "../../api/SKUApis/SKUApis";
+import {EDITSKU_URL} from "../../RouterURL/RouterURL";
+import { Redirect } from "react-router";
+
 export default class Product extends Component {
 
     statusOption = [];
@@ -33,7 +35,8 @@ export default class Product extends Component {
             effectiveDate: new Date(),
             expiredDate: new Date(),
             type: '',
-            attachments: null
+            attachments: null,
+            idOfSKU: null
         };
     }
 
@@ -81,6 +84,13 @@ export default class Product extends Component {
         } else {
             document.getElementById(IdName).classList.remove('is-invalid');
         }
+    }
+
+    onChangeAttachments = () => {
+        this.setState({
+            attachments: null
+        });
+        document.getElementById('showFileName').value = '';
     }
 
     validationSchema = Yup.object().shape({
@@ -131,23 +141,20 @@ export default class Product extends Component {
     // END OF PART CREATE PRODUCT
 
     // PART EDIT SKU
-    onClickEditSKU = (id) => {
-        const getSKUById = async() => {
-            try {
-                const response = SKUApis.getSKUById(id);
-                if (response !== null) {
-
-                }
-            } catch (error) {
-                console.log('failed');
-            }
-        }
-        getSKUById();
+    onClickEditSKU = () => { // need id
+        this.setState({idOfSKU: 1});
     }
     // END OF PART EDIT SKU
 
 
     render() {
+        if (this.state.idOfSKU !== null) {
+            return <Redirect
+                to={{
+                pathname: EDITSKU_URL,
+                state: { key: this.state.idOfSKU }
+            }}/>
+        }
         return (
             <TemplateMain name={
                 <div>
@@ -244,7 +251,7 @@ export default class Product extends Component {
                                             {/* <label className='fileName form-control'>File Name</label> */}
                                             <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
                                             <div className="input-group-append">
-                                                <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
+                                                <button type="button" onClick={this.onChangeAttachments} className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
                                             </div>
                                         </div>
                                         {/* <div className="form-group col-lg-1 col-xl-1">
@@ -287,7 +294,7 @@ export default class Product extends Component {
                                             <td>Accountant</td>
                                             <td>Tokyo</td>
                                             <td>
-                                                <button className="btn btn-success btn-sm rounded-0 btn-edit" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i className="fa fa-edit"></i></button>
+                                                <button onClick={this.onClickEditSKU} className="btn btn-success btn-sm rounded-0 btn-edit" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i className="fa fa-edit"></i></button>
                                                 <button className="btn btn-danger btn-sm rounded-0 btn-delete" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i className="fa fa-trash"></i></button>
                                             </td>
                                         </tr><tr role="row" className="even">

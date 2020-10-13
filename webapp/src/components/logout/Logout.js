@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UserApis from "../../api/UserApis/UserApis";
 import  { Redirect } from 'react-router-dom'
+import {HOME_URL} from "../../RouterURL/RouterURL";
 
 class Logout extends Component {
 
@@ -22,7 +23,7 @@ class Logout extends Component {
                     <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a  onClick={this.onClickLogout}
                         className="btn btn-primary" 
-                        href="login">Logout</a>
+                        href={HOME_URL[1]}>Logout</a>
                 </div>
             </div>
         );

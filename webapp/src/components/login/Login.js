@@ -45,7 +45,7 @@ export default class Login extends Component {
 
     render() {
         if (this.state.token !== null) {
-            return(<Redirect to={HOME_URL} />);
+            return(<Redirect to={{pathname: HOME_URL[1] }}/>);
         }
         return (
             <Formik
