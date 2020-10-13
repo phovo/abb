@@ -1,37 +1,64 @@
-import React from 'react'
+import React, { Component } from 'react'
 import TemplateMain from "../../template/TemplateMain";
 import * as yup from 'yup';
 import { ErrorMessage, FastField, Field, Form, Formik } from "formik";
+import Axios from 'axios';
 
+export default class SKUPage extends Component {
 
-export default function SKUPage() {
-
-    const validationSchema = yup.object().shape({
-        name : yup.string().required('name is required'),
-        status : yup.string().required('status is required')
+    validationSchema = yup.object().shape({
+        // name : yup.string().required('name is required'),
+        // status : yup.string().required('status is required')
     })
-    const handleSubmit=(event)=>{
-        event.prevenDefault();
-        
+    //lấy token từ local store
+    token = JSON.stringify(localStorage.getItem('TOKEN'));
+    
+    
+    
+    //Add SKU
+    handleSubmit=(event)=>{
+        event.preventDefault();
+        let promise = Axios ({
+            url: `http://52.77.251.144:8080/api/sku`,
+            method: 'POST',
+            data : this.state,
+            headers: `${this.token}`
+        })
     }
-    return (
-        <div>
-             <TemplateMain name={
+    state = {
+        name : '',
+        status : '',
+        description :''
+    }
+    handleChange =(e)=>{
+        let {name,value} = e.target;
+        this.setState({
+            [name] : value
+        },()=>{
+            console.log(this.token,'',this.state)
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                <TemplateMain name={
                     <div>
                         <Formik
                             initialValues={{
                                 name: '',
-                                status: ''
+                                status: '',
+                                description:''
                             }}
-                            validationSchema={validationSchema}
-                            onSubmit={handleSubmit}
+                            validationSchema={this.validationSchema}
+                            onSubmit={this.handleSubmit}
                         >
                             <div className="card shadow mb-4">
                                 <div className="card-header py-3">
                                     <h1 className="m-0 font-weight-bold text-primary" id='title'>Create SKU</h1>
                                 </div>
                                 <div className="card-body">
-                                    <Form>
+                                    <Form onSubmit={this.handleSubmit}>
                                         <div className="form-row">
                                             <div className="form-group col-lg-6 col-xl-6">
                                                 <label htmlFor="inputName">Name(*)</label>
@@ -41,6 +68,8 @@ export default function SKUPage() {
                                                     // onChange={this.getValuesForm}
                                                     className="form-control"
                                                     id="inputName"
+                                                    onChange = {this.handleChange}
+                                                    value = {this.state.name}
                                                 />
                                                 <ErrorMessage name="name">
                                                     {
@@ -50,7 +79,7 @@ export default function SKUPage() {
                                             </div>
                                             <div className="form-group col-lg-6 col-xl-6">
                                                 <label htmlFor="inputStatus">Status(*)</label>
-                                                <select  name='status' className="form-control form-control-md">
+                                                <select onChange={this.handleChange} name='status' className="form-control form-control-md">
                                                     <option value="1" selected>Active</option>
                                                     <option value="2">Inactive</option>
                                                 </select>
@@ -64,7 +93,7 @@ export default function SKUPage() {
                                         <div className="form-row">
                                             <div clasName="form-group col-lg-9">
                                                 <label htmlFor="description">Description</label><br/>
-                                                <textarea style={{width:'750px',height:'150px'}}></textarea>
+                                                <textarea onChange={this.handleChange} name="description" style={{width:'750px',height:'150px'}}></textarea>
                                             </div>
                                         </div>
 
@@ -180,5 +209,6 @@ export default function SKUPage() {
                 } />
 
             </div>
-    )
+        )
+    }
 }

@@ -79,4 +79,3 @@ func DeleteProduct(context *gin.Context) {
 	}
 	response.JSON(context, http.StatusOK, operationResult.Result)
 
-}
