@@ -1,31 +1,30 @@
-import React, { Component } from 'react'
+import React from 'react'
 import TemplateMain from "../../template/TemplateMain";
 import * as yup from 'yup';
 import { ErrorMessage, FastField, Field, Form, Formik } from "formik";
 
-export default class SKUPage extends Component {
 
-    validationSchema = yup.object().shape({
+export default function SKUPage() {
+
+    const validationSchema = yup.object().shape({
         name : yup.string().required('name is required'),
         status : yup.string().required('status is required')
     })
-    handleSubmit=(event)=>{
+    const handleSubmit=(event)=>{
         event.prevenDefault();
         
     }
-
-    render() {
-        return (
-            <div>
-                <TemplateMain name={
+    return (
+        <div>
+             <TemplateMain name={
                     <div>
                         <Formik
                             initialValues={{
                                 name: '',
                                 status: ''
                             }}
-                            validationSchema={this.validationSchema}
-                            onSubmit={this.handleSubmit}
+                            validationSchema={validationSchema}
+                            onSubmit={handleSubmit}
                         >
                             <div className="card shadow mb-4">
                                 <div className="card-header py-3">
@@ -51,7 +50,7 @@ export default class SKUPage extends Component {
                                             </div>
                                             <div className="form-group col-lg-6 col-xl-6">
                                                 <label htmlFor="inputStatus">Status(*)</label>
-                                                <select onChange={this.getValuesForm} name='status' className="form-control form-control-md">
+                                                <select  name='status' className="form-control form-control-md">
                                                     <option value="1" selected>Active</option>
                                                     <option value="2">Inactive</option>
                                                 </select>
@@ -181,6 +180,5 @@ export default class SKUPage extends Component {
                 } />
 
             </div>
-        )
-    }
+    )
 }
