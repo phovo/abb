@@ -46,11 +46,11 @@ func ConnectDatabase() {
 
 func dataSource() string {
 	host := "localhost"
-	pass := "postgres"
+	pass := "abb123"
 	if os.Getenv("profile") == "prod" {
 		host = "db"
 		pass = os.Getenv("db_pass")
 	}
 	return "postgresql://" + host + ":5432/abb" +
-		"?user=postgres&sslmode=disable&password=" + pass
+		"?user=abb&sslmode=disable&password=" + pass
 }

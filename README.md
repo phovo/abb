@@ -192,3 +192,19 @@ its database. Access the application on http://localhost:8080.
       "totalItems": 1
       }
       }
+- Product:
+  - Create
+    Path: http://localhost:8080/api/product
+    Method: POST
+  - Update
+    Path: http://localhost:8080/api/product
+    Method: PUT
+  - GETs
+    Path: http://localhost:8080/api/product
+    Method: GET
+  - GET
+    Path: http://localhost:8080/api/product/idProduct
+    Method: GET
+  - Delete
+    Path: http://localhost:8080/api/product/idProduct
+    Method: DELETE
