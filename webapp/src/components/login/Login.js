@@ -20,28 +20,28 @@ class Login extends Component {
     }
 
     handleSubmit = (data) =>  {
-        // const isCheckLogin = async () => {
-        //     try {
-        //         const response = await UserApis.findUserNameAndPassword(data);
-        //         console.log(response);
-        //         if (response !== undefined) {
-        //             localStorage.setItem('TOKEN', response); // save token in localstorage
-        //             this.setState({token: response});
-        //         } else {
-        //             document.getElementsByClassName('notify-error')[0].style.display = 'block';
-        //         }
-        //     } catch (error) {
-        //         console.log('failed ', error);
-        //         document.getElementsByClassName('notify-error')[0].style.display = 'block';
-        //     } 
-        // }
-        // isCheckLogin();
+        const isCheckLogin = async () => {
+            try {
+                const response = await UserApis.findUserNameAndPassword(data);
+                console.log(response);
+                if (response !== undefined) {
+                    localStorage.setItem('TOKEN', response); // save token in localstorage
+                    this.setState({token: response});
+                } else {
+                    document.getElementsByClassName('notify-error')[0].style.display = 'block';
+                }
+            } catch (error) {
+                console.log('failed ', error);
+                document.getElementsByClassName('notify-error')[0].style.display = 'block';
+            } 
+        }
+        isCheckLogin();
         
     }
 
     validationSchema = Yup.object().shape({
-        // username: Yup.string()
-        //     .required('Required'),
+        username: Yup.string()
+            .required('Required'),
         password: Yup.string()
             .required('Required'),
     });
