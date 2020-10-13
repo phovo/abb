@@ -3,39 +3,47 @@ import './Login.css';
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import UserApis from "../../api/UserApis/UserApis";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
-
+    state = {token: null};
+    
     constructor(props) {
         super(props);
         const elementBody = document.getElementById('body');
         elementBody.classList.add("bg-gradient-primary");
     }
 
-    handleSubmit = (data) => {
-        try {
-            const response = UserApis.findUserNameAndPassword(data);
-            if (response !== null && response !== '') {
-                localStorage.setItem('TOKEM', response);
-                return <Redirect to='/home' />;
-            } else {
+    handleSubmit = (data) =>  {
+        const isCheckLogin = async () => {
+            try {
+                const response = await UserApis.findUserNameAndPassword(data);
+                console.log(response);
+                if (response !== undefined) {
+                    localStorage.setItem('TOKEM', response); // save token in localstorage
+                    this.setState({token: response});
+                } else {
+                    document.getElementsByClassName('notify-error')[0].style.display = 'block';
+                }
+            } catch (error) {
+                console.log('failed ', error);
                 document.getElementsByClassName('notify-error')[0].style.display = 'block';
-            }
-        } catch (error) {
-            console.log('failed ', error);
+            } 
         }
+        isCheckLogin();
     }
 
     validationSchema = Yup.object().shape({
         username: Yup.string()
-            .email('Invalid email')
             .required('Required'),
         password: Yup.string()
             .required('Required'),
     });
 
     render() {
+        if (this.state.token !== null) {
+            return(<Redirect to='/home' />);
+        }
         return (
             <Formik
                 initialValues={{

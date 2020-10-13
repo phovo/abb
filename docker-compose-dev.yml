@@ -3,9 +3,9 @@ services:
   dev_db:
     image: postgres:9.6-alpine
     environment:
-      POSTGRES_PASSWORD: pass
-      POSTGRES_USER: goxygen
-      POSTGRES_DB: goxygen
+      POSTGRES_PASSWORD: abb123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: abb
     ports:
       - 5432:5432
     volumes:

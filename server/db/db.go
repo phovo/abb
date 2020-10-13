@@ -1,10 +1,6 @@
 package db
 
 import (
-	"abbp/model"
-	"log"
-	"os"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq" // import driver postgress
 )
@@ -24,7 +20,7 @@ func ConnectDatabase() {
 		log.Fatal(err)
 	}
 
-	err = database.AutoMigrate(&model.User{}, &model.Role{}, &model.SKU{}).Error
+	err = database.AutoMigrate(&model.User{}, &model.Role{}, &model.SKU{}, &model.Product{}).Error
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +42,7 @@ func ConnectDatabase() {
 
 func dataSource() string {
 	host := "localhost"
-	pass := "postgres"
+	pass := "abb123"
 	if os.Getenv("profile") == "prod" {
 		host = "db"
 		pass = os.Getenv("db_pass")

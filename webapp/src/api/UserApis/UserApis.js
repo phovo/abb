@@ -3,7 +3,7 @@ import axiosClient from "../axiosClient";
 const UserApis = {
     findUserNameAndPassword: (user) => {
         const url = 'login';
-        return axiosClient.post(url, {user});
+        return axiosClient.post(url, user);
     },
 
     logout: () => {
