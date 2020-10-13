@@ -1,0 +1,33 @@
+.btn-add, .btn-save, .btn-cancel, .btn-remove-file {
+    width: 80px;
+    float: right;
+}
+
+.btn-add, .btn-save, .btn-cancel {
+    margin-bottom: 20px;
+}
+
+.btn-cancel {
+    margin-right: 20px;
+}
+
+.btn-remove-file, .fileName {
+    margin-top: 40px;
+}
+
+.table-sku {
+    float: left;
+}
+
+.btn-edit, .btn-delete {
+    margin-left: 20%;
+}
+
+.react-datepicker-wrapper {
+    inline-size: -webkit-fill-available;
+}
+
+.block-fileName {
+    place-content: flex-end;
+    margin-bottom: 21px;
+}
