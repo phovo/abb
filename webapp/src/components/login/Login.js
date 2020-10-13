@@ -1,44 +1,45 @@
+
 import React, { Component } from "react";
+import './Login.css';
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import * as Yup from 'yup';
+import {RestApi} from '../../api/RestApi'
+
 
 export default class Login extends Component {
 
-    constructor(props) {
-        super(props);
-        const elementBody = document.getElementById('body');
-        elementBody.classList.add("bg-gradient-primary");
-    }
 
     handleSubmit = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
+        try {
+            if (false) {
+
+            } else {
+                document.getElementsByClassName('notify-error')[0].style.display='block';
+            }
+        } catch(error) {
+            console.log('failed ', error);
+        }
     }
 
-
-      validationSchema = Yup.object().shape({
+    validationSchema = Yup.object().shape({
         username: Yup.string()
           .email('Invalid email')
           .required('Required'),
         password: Yup.string()
           .required('Required'),
-      });
+    });
 
     render() {
         return (
             <Formik
-                initialValues = {{
+                initialValues={{
                     username: '',
                     password: ''
                 }}
-                initialValues={this.initialValues}
-                validate={this.validationSchema}
+                validationSchema={this.validationSchema}
                 onSubmit={this.handleSubmit}
             >
-            {(props) => 
-                {
-                const { touched, errors } = props;
-                console.log(errors);
-            return (
             <div className="container">
                 {/* Outer Row */}
                 <div className="row justify-content-center">
@@ -53,6 +54,9 @@ export default class Login extends Component {
                                             <div className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                             </div>
+                                            <div className='col-md-12 notify-error'>
+                                                <label> Username or password invalid </label>
+                                            </div>
                                             
                                             <Form className="user">
                                                 <div className="form-group">
@@ -63,7 +67,11 @@ export default class Login extends Component {
                                                         id="username" 
                                                         placeholder="Enter Email Address..." />
                                                 </div>
-                                                {touched.username && <ErrorMessage name="username" />}
+                                                <ErrorMessage name="username">
+                                                        {
+                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
+                                                        }
+                                                    </ErrorMessage>
                                                 <div className="form-group">
                                                     <Field
                                                         name='password' 
@@ -72,29 +80,27 @@ export default class Login extends Component {
                                                         id="exampleInputPassword" 
                                                         placeholder="Password" />
                                                 </div>
-                                                {touched.password && <ErrorMessage name="password" />}
-                                                <div className="form-group">
-                                                    <div className="custom-control custom-checkbox small">
-                                                        <input type="checkbox" className="custom-control-input" id="customCheck" />
-                                                        <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
-                                                    </div>
-                                                </div>
-                                                <input type='submit' value='Submit' className="btn btn-primary btn-user btn-block"/>
+                                                <ErrorMessage name="password">
+                                                        {
+                                                            (err) => <div className="text text-danger validate-input" style={{fontSize:'16px'}}>{err}</div>
+                                                        }
+                                                    </ErrorMessage>
+                                                    <input type='submit' value='Submit' className="btn btn-primary btn-user btn-block" />
+                                                    <hr />
+                                                    <a href="index.html" className="btn btn-google btn-user btn-block">
+                                                        <i className="fab fa-google fa-fw" /> Login with Google
+                                                </a>
+                                                    <a href="index.html" className="btn btn-facebook btn-user btn-block">
+                                                        <i className="fab fa-facebook-f fa-fw" /> Login with Facebook
+                                                </a>
+                                                </Form>
                                                 <hr />
-                                                <a href="index.html" className="btn btn-google btn-user btn-block">
-                                                    <i className="fab fa-google fa-fw" /> Login with Google
-                                                </a>
-                                                <a href="index.html" className="btn btn-facebook btn-user btn-block">
-                                                    <i className="fab fa-facebook-f fa-fw" /> Login with Facebook
-                                                </a>
-                                            </Form>
-                                            
-                                            <hr />
-                                            <div className="text-center">
-                                                <a className="small" href="forgot-password.html">Forgot Password?</a>
-                                            </div>
-                                            <div className="text-center">
-                                                <a className="small" href="register.html">Create an Account!</a>
+                                                <div className="text-center">
+                                                    <a className="small" href="forgot-password.html">Forgot Password?</a>
+                                                </div>
+                                                <div className="text-center">
+                                                    <a className="small" href="register.html">Create an Account!</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -103,9 +109,7 @@ export default class Login extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
-            )}}
             </Formik>
-        );
+        )
     }
 }
