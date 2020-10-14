@@ -1,4 +1,4 @@
-import { DELETE_SKU_ERROR, FETECHED_ALL_SKU, FETECHED_ALL_SKU_ERROR } from "../_const/actions"
+import { CREATE_SKU, CREATE_SKU_ERROR, DELETE_SKU_ERROR, FETECHED_ALL_SKU, FETECHED_ALL_SKU_ERROR } from "../_const/actions"
 const initialState = {
     sku: [],
     searchText: '',
@@ -7,7 +7,8 @@ const initialState = {
     totalElements: 1,
     size: 10,
     isError: false,
-    messageError: ''
+    messageError: '',
+    messageSuccess: ''
 };
 
 
@@ -34,6 +35,17 @@ export function sku(state = initialState, action) {
                 ...state,
                 isError: true,
                 messageError: 'Cannot delete data SKU'
+            };
+        case CREATE_SKU:
+            return {
+                ...state,
+                messageSucess: 'Create data SKU is success'
+            };
+        case CREATE_SKU_ERROR:
+            return {
+                ...state,
+                isError : true,
+                messageError: 'Cannot create data SKU'
             };
         default:
             return {...state, isError: false}
