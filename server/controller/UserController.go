@@ -19,6 +19,12 @@ func LoginHandle(context *gin.Context) {
 		response.ERROR(context, http.StatusUnprocessableEntity, utils.INFO_LOGIN_INVALID)
 		return
 	}
+	input.Prepare()
+	errInput := input.Validate()
+	if errInput != nil {
+		response.ERROR(context, http.StatusUnprocessableEntity, errInput.Error())
+		return
+	}
 	// check DB
 	isUser := service.LoginUser(input.Username, input.Password)
 	if isUser {

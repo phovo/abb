@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"strings"
+	"time"
+)
 
 // Product model
 type Product struct {
@@ -12,4 +16,28 @@ type Product struct {
 	Type          string    `json:"type" gorm:"size:100" `
 	File          string    `json:"file" gorm:"size:100" `
 	SKUs          []SKU     `gorm:"many2many:product_sku;"`
+}
+
+// Prepare cleans the inputs
+func (u *Product) Prepare() {
+	u.Name = strings.TrimSpace(u.Name)
+	u.Type = strings.TrimSpace(u.Type)
+	u.File = strings.TrimSpace(u.File)
+}
+
+// Validate validates the inputs
+func (u *Product) Validate() error {
+	if u.Name == "" {
+		return errors.New("Name is required")
+	}
+	if u.Type == "" {
+		return errors.New("Type is required")
+	}
+	if u.File == "" {
+		return errors.New("File is required")
+	}
+	if u.ExpiredDate.Before(u.EffectiveDate) {
+		return errors.New("ExpiredDate is invalid")
+	}
+	return nil
 }

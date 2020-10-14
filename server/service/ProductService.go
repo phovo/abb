@@ -6,6 +6,7 @@ import (
 	"abbp/model"
 	"math"
 	"strconv"
+	"strings"
 )
 
 // CreateProduct returns a new product created or an error
@@ -28,8 +29,6 @@ func GetProducts(page, size, textSearch string) dto.OperationResult {
 	var pagination dto.Pagenation
 	var offset, totalItem, totalPage int
 
-	// db.DB.Model(products).Count(&totalItem)
-
 	if pageNumber < 1 {
 		pageNumber = 1
 	}
@@ -43,13 +42,13 @@ func GetProducts(page, size, textSearch string) dto.OperationResult {
 		offset = (pageNumber - 1) * sizeNumber
 	}
 	if textSearch == "" {
-		db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+		db.DB.Offset(offset).Limit(sizeNumber).Order("name").Find(&products)
 		db.DB.Model(products).Count(&totalItem)
 	} else {
-		db.DB.Where("name LIKE ?", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
-		db.DB.Model(products).Where("name LIKE ?", textSearch+"%").Count(&totalItem)
+		textSearch = strings.ToLower(textSearch)
+		db.DB.Where("lower(name) LIKE ? OR lower(type) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Order("name").Find(&products)
+		db.DB.Model(products).Where("lower(name) LIKE ? OR lower(type) LIKE ?", textSearch+"%", textSearch+"%").Count(&totalItem)
 	}
-	// db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
 	totalPage = int(math.Ceil(float64(totalItem) / float64(sizeNumber)))
 
 	pagination.Items = products

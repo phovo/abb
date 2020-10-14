@@ -25,7 +25,7 @@ func GenerateToken(username string, isUser bool) string {
 		username,
 		isUser,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 5).Unix(),
 			Issuer:    ISSURE,
 			IssuedAt:  time.Now().Unix(),
 		},
@@ -56,7 +56,7 @@ func RefreshToken(myToken string) string {
 	_, err := jwt.ParseWithClaims(myToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SECRET_KEY), nil
 	})
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(5 * time.Hour)
 	claims.ExpiresAt = expirationTime.Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

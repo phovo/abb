@@ -2,16 +2,41 @@ import React, { Component } from 'react'
 import TemplateMain from "../../template/TemplateMain";
 import * as yup from 'yup';
 import { ErrorMessage, FastField, Field, Form, Formik } from "formik";
+import Axios from 'axios';
 
 export default class SKUPage extends Component {
 
     validationSchema = yup.object().shape({
-        name : yup.string().required('name is required'),
-        status : yup.string().required('status is required')
+        // name : yup.string().required('name is required'),
+        // status : yup.string().required('status is required')
     })
+    //lấy token từ local store
+    token = JSON.stringify(localStorage.getItem('TOKEN'));
+    
+    
+    
+    //Add SKU
     handleSubmit=(event)=>{
-        event.prevenDefault();
-        
+        event.preventDefault();
+        let promise = Axios ({
+            url: `http://52.77.251.144:8080/api/sku`,
+            method: 'POST',
+            data : this.state,
+            headers: `${this.token}`
+        })
+    }
+    state = {
+        name : '',
+        status : '',
+        description :''
+    }
+    handleChange =(e)=>{
+        let {name,value} = e.target;
+        this.setState({
+            [name] : value
+        },()=>{
+            console.log(this.token,'',this.state)
+        })
     }
 
     render() {
@@ -22,7 +47,8 @@ export default class SKUPage extends Component {
                         <Formik
                             initialValues={{
                                 name: '',
-                                status: ''
+                                status: '',
+                                description:''
                             }}
                             validationSchema={this.validationSchema}
                             onSubmit={this.handleSubmit}
@@ -32,7 +58,7 @@ export default class SKUPage extends Component {
                                     <h1 className="m-0 font-weight-bold text-primary" id='title'>Create SKU</h1>
                                 </div>
                                 <div className="card-body">
-                                    <Form>
+                                    <Form onSubmit={this.handleSubmit}>
                                         <div className="form-row">
                                             <div className="form-group col-lg-6 col-xl-6">
                                                 <label htmlFor="inputName">Name(*)</label>
@@ -42,6 +68,8 @@ export default class SKUPage extends Component {
                                                     // onChange={this.getValuesForm}
                                                     className="form-control"
                                                     id="inputName"
+                                                    onChange = {this.handleChange}
+                                                    value = {this.state.name}
                                                 />
                                                 <ErrorMessage name="name">
                                                     {
@@ -51,7 +79,7 @@ export default class SKUPage extends Component {
                                             </div>
                                             <div className="form-group col-lg-6 col-xl-6">
                                                 <label htmlFor="inputStatus">Status(*)</label>
-                                                <select onChange={this.getValuesForm} name='status' className="form-control form-control-md">
+                                                <select onChange={this.handleChange} name='status' className="form-control form-control-md">
                                                     <option value="1" selected>Active</option>
                                                     <option value="2">Inactive</option>
                                                 </select>
@@ -65,7 +93,7 @@ export default class SKUPage extends Component {
                                         <div className="form-row">
                                             <div clasName="form-group col-lg-9">
                                                 <label htmlFor="description">Description</label><br/>
-                                                <textarea style={{width:'750px',height:'150px'}}></textarea>
+                                                <textarea onChange={this.handleChange} name="description" style={{width:'750px',height:'150px'}}></textarea>
                                             </div>
                                         </div>
 

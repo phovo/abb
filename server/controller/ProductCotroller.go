@@ -18,6 +18,12 @@ func CreateProduct(context *gin.Context) {
 		response.ERROR(context, http.StatusBadRequest, utils.INFO_PRODUCT_INVALID)
 		return
 	}
+	product.Prepare()
+	errValidate := product.Validate()
+	if errValidate != nil {
+		response.ERROR(context, http.StatusUnprocessableEntity, errValidate.Error())
+		return
+	}
 	operationResult := service.CreateProduct(product)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.ERROR_CREATE_ENTITY)
@@ -60,7 +66,12 @@ func UpdateProduct(context *gin.Context) {
 		response.ERROR(context, http.StatusBadRequest, utils.INFO_PRODUCT_INVALID)
 		return
 	}
-
+	product.Prepare()
+	errValidate := product.Validate()
+	if errValidate != nil {
+		response.ERROR(context, http.StatusUnprocessableEntity, errValidate.Error())
+		return
+	}
 	operationResult := service.UpdateProduct(id, &product)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.ERROR_UPDATE_ENTITY)
