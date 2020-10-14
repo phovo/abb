@@ -91,11 +91,11 @@ func GetSKUs(page, size, textSearch string) dto.OperationResult {
 		offset = (pageNumber - 1) * sizeNumber
 	}
 	if textSearch == "" {
-		db.DB.Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+		db.DB.Offset(offset).Limit(sizeNumber).Order("name").Find(&SKUs)
 		db.DB.Model(SKUs).Count(&totalItem)
 	} else {
 		textSearch = strings.ToLower(textSearch)
-		db.DB.Where("lower(name) LIKE ? OR lower(description) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&SKUs).Order("id")
+		db.DB.Where("lower(name) LIKE ? OR lower(description) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Order("name").Find(&SKUs)
 		db.DB.Model(SKUs).Where("lower(name) LIKE ? OR lower(description) LIKE ?", textSearch+"%", textSearch+"%").Count(&totalItem)
 	}
 

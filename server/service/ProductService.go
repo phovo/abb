@@ -42,11 +42,11 @@ func GetProducts(page, size, textSearch string) dto.OperationResult {
 		offset = (pageNumber - 1) * sizeNumber
 	}
 	if textSearch == "" {
-		db.DB.Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+		db.DB.Offset(offset).Limit(sizeNumber).Order("name").Find(&products)
 		db.DB.Model(products).Count(&totalItem)
 	} else {
 		textSearch = strings.ToLower(textSearch)
-		db.DB.Where("lower(name) LIKE ? OR lower(type) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Find(&products).Order("id")
+		db.DB.Where("lower(name) LIKE ? OR lower(type) LIKE ?", textSearch+"%", textSearch+"%").Offset(offset).Limit(sizeNumber).Order("name").Find(&products)
 		db.DB.Model(products).Where("lower(name) LIKE ? OR lower(type) LIKE ?", textSearch+"%", textSearch+"%").Count(&totalItem)
 	}
 	totalPage = int(math.Ceil(float64(totalItem) / float64(sizeNumber)))

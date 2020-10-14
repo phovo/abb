@@ -17,6 +17,7 @@ func RunServer() {
 	router.POST("/login", controller.LoginHandle)
 	router.POST("/logout", controller.Logouthandle)
 	router.POST("/refresh", controller.RefreshHandle)
+	router.POST("/testtttt", controller.TestPage)
 
 	api := router.Group("/api")
 	{

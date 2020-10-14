@@ -25,7 +25,7 @@ func GenerateToken(username string, isUser bool) string {
 		username,
 		isUser,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * 5).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 5).Unix(),
 			Issuer:    ISSURE,
 			IssuedAt:  time.Now().Unix(),
 		},

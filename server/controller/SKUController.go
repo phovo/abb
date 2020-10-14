@@ -5,6 +5,7 @@ import (
 	"abbp/response"
 	"abbp/service"
 	"abbp/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,13 @@ func CreateSKU(context *gin.Context) {
 		response.ERROR(context, http.StatusBadRequest, utils.INFO_SKU_INVALID)
 		return
 	}
+	sku.Prepare()
+	errValidate := sku.Validate()
+	if errValidate != nil {
+		response.ERROR(context, http.StatusUnprocessableEntity, errValidate.Error())
+		return
+	}
+
 	operationResult := service.CreateSKU(sku)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.ERROR_CREATE_ENTITY)
@@ -70,6 +78,13 @@ func UpdateSKU(context *gin.Context) {
 		return
 	}
 
+	sku.Prepare()
+	errValidate := sku.Validate()
+	if errValidate != nil {
+		response.ERROR(context, http.StatusUnprocessableEntity, errValidate.Error())
+		return
+	}
+
 	operationResult := service.UpdateSKU(id, &sku)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.ERROR_UPDATE_ENTITY)
@@ -89,21 +104,23 @@ func DeleteSKU(context *gin.Context) {
 	response.JSON(context, http.StatusOK, operationResult.Result)
 }
 
-// func TestPage(context *gin.Context) {
-// 	// limit := 10
-// 	// page := 1
-// 	// sort := "name asc"
-// 	// var searchs []dto.Search
-// 	// get current url path
-// 	query := context.Request.URL.Query()
-// 	for _, value := range query {
-// 		queryValue := value[len(value)-1]
-// 		fmt.Println(queryValue)
-// 	}
-// 	// search query params
-// 	// searchQueryParams := ""
-// 	// for _, search := range []dto.Search {
-// 	// 	// fmt.Sprintf("&%s.%s=%s", search.Column, search.Action, search.Query)
-// 	// 	// searchQueryParams += String.form "&%s.%s=%s", search.Column, search.Action, search.Query)
-// 	// }
-// }
+func TestPage(context *gin.Context) {
+	// limit := 10
+	// page := 1
+	// sort := "name asc"
+	// var searchs []dto.Search
+	// get current url path
+	query := context.Request.URL.Query()
+	for index, value := range query {
+		queryValue := value[len(value)-1]
+		fmt.Println(queryValue)
+		fmt.Println(index)
+	}
+	fmt.Println("okkkkkkkk")
+	// search query params
+	// searchQueryParams := ""
+	// for _, search := range []dto.Search {
+	// 	// fmt.Sprintf("&%s.%s=%s", search.Column, search.Action, search.Query)
+	// 	// searchQueryParams += String.form "&%s.%s=%s", search.Column, search.Action, search.Query)
+	// }
+}
