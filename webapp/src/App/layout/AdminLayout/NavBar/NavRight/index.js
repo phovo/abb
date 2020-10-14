@@ -19,7 +19,7 @@ class NavRight extends Component {
         this.props.dispatch(userService.logout())
     }
     render() {
-        
+        const auth = localStorage.getItem('auth');
         return (
             <Aux>
                 <ul className="navbar-nav ml-auto">
@@ -31,7 +31,7 @@ class NavRight extends Component {
                             <Dropdown.Menu alignRight className="profile-notification">
                                 <div className="pro-head" onClick={this.handleLogout}>
                                     <img src={Avatar1} className="img-radius" alt="User Profile"/>
-                                    <span>John Doe</span>
+                                    <span>{auth}</span>
                                     <a className="dud-logout" title="Logout">
                                         <i className="feather icon-log-out"/>
                                     </a>

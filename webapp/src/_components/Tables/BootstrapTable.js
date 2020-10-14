@@ -23,9 +23,9 @@ class BootstrapTable extends React.Component {
                                 return (<tr key={d.id}>
                                     <th scope="row">{d.id}</th>
                                     <td>{d.name}</td>
-                                    <td>{d.status}</td>
+                                    <td>{d.status ? 'active' : 'inactive'}</td>
                                     <td>{d.description}</td>
-                                    <td><button className='btn btn-success' style={{marginRight: '10px'}}><i className="fa fa-edit"></i>
+                                    <td style={{width: '20px'}}><button className='btn btn-success' style={{marginRight: '10px'}}><i className="fa fa-edit"></i>
                                     </button><button className='btn btn-danger' onClick={() => this.props.delete(d.id)}><i className="fa fa-trash"></i></button></td>
                                 </tr>)
                             })}

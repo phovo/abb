@@ -18,7 +18,7 @@ function login(username, password){
         .then((response)=>{
             if (response.data) {
                 localStorage.setItem('token', response.data.data);
-                localStorage.setItem('auth', 'Sang');
+                localStorage.setItem('auth', username);
                 dispatch(setUserDetails(response.data));
                 history.push('/product');
             }

@@ -17,11 +17,10 @@ class SearchBox extends React.Component {
     }
 
     render() {
-
         return (
             <Aux>
                 <Row>
-                    <Col md={11}>
+                    <Col md={9}>
                         <Form>
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Control type="text" placeholder="Typing to search data" value={this.state.text} onChange={this.onChangeValue}/>
@@ -29,7 +28,7 @@ class SearchBox extends React.Component {
                         </Form>
                     </Col>
                     <Col md={1}>
-                        <Button onClick={this.search}>Search</Button>
+                        <Button onClick={this.search} style={{width: '146px'}}>Search</Button>
                     </Col>
                 </Row>
             </Aux>
