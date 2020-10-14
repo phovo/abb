@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Form, Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button, InputGroup, FormControl, DropdownButton, Dropdown, Pagination, Table } from 'react-bootstrap';
 import { FastField, Form as FormOfMik, Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
@@ -10,15 +10,17 @@ import Aux from "../../hoc/_Aux";
 import './Product.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {productAction} from '../../_actions/product.action'
+import { productAction } from '../../_actions/product.action'
 import SKUList from '../sku/SKUList';
+import BootstrapTable from '../../_components/Tables/BootstrapTable';
 class ProductList extends React.Component {
 
     statusOption = [];
     typesOption = [];
     state = {};
+    objSKU = {};
 
     constructor(props) {
         super(props);
@@ -38,7 +40,15 @@ class ProductList extends React.Component {
             effectiveDate: new Date(),
             expiredDate: new Date(),
             type: '',
-            attachments: null
+            attachments: null,
+            SKUs: []
+        };
+
+        this.objSKU = {
+            id: 0,
+            name: '',
+            status: 'false',
+            description: ''
         };
     }
     getValueExpiredDate = (e) => {
@@ -69,13 +79,17 @@ class ProductList extends React.Component {
     getValueFile = (event) => {
         const objectFile = event.target.files[0];
         document.getElementById('showFileName').value = objectFile.name;
-        this.setState({ attachments: objectFile });
+        this.readURL(event.target, (e) => {
+            this.setState({ attachments: e.target.result });
+        });
     }
 
-    fileUpload() {
-        const formData = new FormData();
-        formData.append('file', this.state.attachments, this.state.attachments.name);
-        return formData;
+    readURL(input, onLoadCallback) {
+        if (input.files[0] && input.files) {
+            let reader = new FileReader();
+            reader.onload = onLoadCallback;
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     showError = (active, IdName) => {
@@ -87,9 +101,9 @@ class ProductList extends React.Component {
     }
 
     shouldComponentUpdate(nextState, nextProps) {
-        if(!this.props.product.isError && nextState.product.isError) {
+        if (!this.props.product.isError && nextState.product.isError) {
             toast.error(nextState.product.messageError);
-        } else if(!this.props.product.isSuccess && nextState.product.isSuccess) {
+        } else if (!this.props.product.isSuccess && nextState.product.isSuccess) {
             toast.info(nextState.product.messageSuccess);
         }
         return true;
@@ -110,8 +124,38 @@ class ProductList extends React.Component {
         }),
     })
 
+    onChangeInputSKU = (event) => {
+        if(event.target.name === 'name') {
+            this.objSKU.name = event.target.value;
+        } else if(event.target.name === 'status') {
+            this.objSKU.status = event.target.value;
+        } else if(event.target.name === 'description') {
+            this.objSKU.description = event.target.value;
+        }
+    }
+
+    onClickAddSKU = () => {
+        if (this.objSKU !== null && this.objSKU.name !== '' && this.objSKU.description !== '') {
+            this.objSKU.id ++;
+            this.state.SKUs.push(this.objSKU);
+            this.resetInputSKU();
+            this.objSKU = {
+                id: this.objSKU.id,
+                name: '',
+                status: '0',
+                description: ''
+            }
+            this.forceUpdate();
+        }
+    }
+
+    resetInputSKU = () => {
+        document.getElementById('SKUName').value = '';
+        document.getElementById('SKUDescription').value = '';
+        document.getElementById('SKUStatus').selectedIndex  = 'false';
+    }
+
     handleSubmit = (data) => {
-        console.log(data);
         if (data.name !== '' && this.state.status !== '' && this.state.effectiveDate !== null && this.state.type !== '') {
             this.showError(false, 'inputName');
             this.showError(false, 'inputStatus');
@@ -120,41 +164,47 @@ class ProductList extends React.Component {
 
             this.setState({
                 name: data.name,
-                attachments: null
             });
 
+            console.log(this.state);
+
+            // call api
             const product = this.state;
             const response = this.props.createProduct(product);
-                   
+
         } else {
             console.log('form invalid');
         }
     }
 
+    componentWillUnmount = () => {
+        console.log("123");
+    }
+
     render() {
         return (
             <Aux>
-                  <Formik
-                                    initialValues={{
-                                        name: '',
-                                        status: '',
-                                        effectiveDate: new Date(),
-                                        expiredDate: new Date(),
-                                        type: '',
-                                        attachments: null
-                                    }}
-                                    validationSchema={this.validationSchema}
-                                    onSubmit={this.handleSubmit}
-                                >
-                                    <FormOfMik>
-                <Row>
-                    <Col>
-                        <Card>
-                            <Card.Header>
-                                <Card.Title as="h3">Create new Product</Card.Title>
-                            </Card.Header>
-                            <Card.Body>
-                              
+                <Formik
+                    initialValues={{
+                        name: '',
+                        status: '',
+                        effectiveDate: new Date(),
+                        expiredDate: new Date(),
+                        type: '',
+                        attachments: null
+                    }}
+                    validationSchema={this.validationSchema}
+                    onSubmit={this.handleSubmit}
+                >
+                    <FormOfMik>
+                        <Row>
+                            <Col>
+                                <Card>
+                                    <Card.Header>
+                                        <Card.Title as="h3">Create new Product</Card.Title>
+                                    </Card.Header>
+                                    <Card.Body>
+
                                         <Row>
                                             <Col md={6}>
                                                 <Form.Group controlId="formBasicEmail">
@@ -164,10 +214,8 @@ class ProductList extends React.Component {
                                                         type='text'
                                                         className="form-control"
                                                         id="inputName"
+                                                        placeholder='Product name'
                                                     />
-                                                    <Form.Text className="text-muted">
-                                                        We'll never share your email with anyone else.
-                                                </Form.Text>
                                                 </Form.Group>
 
                                             </Col>
@@ -181,15 +229,11 @@ class ProductList extends React.Component {
                                                         id='inputStatus'
                                                         className="form-control-md" />
                                                 </Form.Group>
-
                                             </Col>
                                         </Row>
 
                                         <Row>
                                             <Col md={6}>
-
-
-
                                                 <Form.Group controlId="formBasicPassword">
                                                     <Form.Label>Effective date(*)</Form.Label>
                                                     <DatePicker
@@ -203,7 +247,6 @@ class ProductList extends React.Component {
                                                         showTimeSelect
                                                     />
                                                 </Form.Group>
-
 
                                             </Col>
                                             <Col md={6}>
@@ -223,9 +266,7 @@ class ProductList extends React.Component {
                                             </Col>
                                         </Row>
 
-
                                         <Row>
-
                                             <Col md={6}>
                                                 <Form.Group controlId="exampleForm.ControlInput1">
                                                     <Form.Label>Type(*)</Form.Label>
@@ -236,28 +277,9 @@ class ProductList extends React.Component {
                                                         onChange={this.getValueType}
                                                         className="form-control-md" />
                                                 </Form.Group>
-
                                             </Col>
 
-                                            {/* <Col md={6}>
-
-                                                <Form.Group controlId="formBasicEmail">
-                                                    <Form.Label>Attachments</Form.Label>
-                                                    <Form.Control
-                                                        name="name"
-                                                        type='file'
-                                                        className="form-control"
-                                                        id="customFile"
-                                                    />
-                                                    <Form.Text className="text-muted">
-                                                        We'll never share your email with anyone else.
-                                                    </Form.Text>
-                                                </Form.Group>
-
-                                            </Col> */}
-
                                             <Col md={2}>
-
                                                 <Form.Group controlId="formBasicEmail">
                                                     <Form.Label>Attachments</Form.Label>
                                                     <div className="custom-file">
@@ -265,18 +287,8 @@ class ProductList extends React.Component {
                                                         <label className="custom-file-label form-control" htmlFor="customFile">File</label>
                                                     </div>
                                                 </Form.Group>
-
                                             </Col>
-                                            {/* <Col md={4} className={'rounded input-group block-fileName'}>
 
-                                                <Form.Group controlId="formBasicEmail">
-                                                    <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
-                                                    <div className="input-group-append">
-                                                        <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
-                                                    </div>
-                                                </Form.Group>
-
-                                            </Col> */}
                                             <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
                                                 {/* <label className='fileName form-control'>File Name</label> */}
                                                 <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
@@ -284,28 +296,95 @@ class ProductList extends React.Component {
                                                     <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
                                                 </div>
                                             </div>
-
+                                            <div className='col-md-12 float-right'>
+                                                <button className="btn btn-primary btn-add-product" type='submit'>Add</button>
+                                            </div>
                                         </Row>
-
-
-                                    
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <SKUList /> 
-                <Row>
-                    <Col>
-                        <Card>  
-                            <Card.Body>
-                            <div className="float-right"><button type="submit" className="btn btn-success btn-save">Save</button>
-                            <button type="button" className="btn btn-primary btn-cancel" style={{width: '100px'}}>Cancel</button></div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>  
-                </FormOfMik>
-                                </Formik>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                        {/* <SKUList /> */}
+                        <Row>
+                            <Col>
+                                <Card>
+                                    <Card.Header>
+                                        <Row>
+                                            <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
+                                        </Row>
+                                    </Card.Header>
+                                    <Card.Body>
+                                        <Table responsive>
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Description</th>
+                                                <th>action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr key='0'>
+                                                    <th scope="row">0</th>
+                                                    <td>
+                                                        <input 
+                                                            id='SKUName'
+                                                            name="name"
+                                                            type='text'
+                                                            className="form-control"
+                                                            placeholder='SKU Name'
+                                                            onChange={this.onChangeInputSKU} 
+                                                            />
+                                                    </td>
+                                                    <td>
+                                                        <select
+                                                            onChange={this.onChangeInputSKU} 
+                                                            id='SKUStatus'
+                                                            name="status"
+                                                            className="form-control">
+                                                            <option value='true'>Active</option>
+                                                            <option value='false' selected>Inactive</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input 
+                                                            onChange={this.onChangeInputSKU}
+                                                            id='SKUDescription'
+                                                            name="description"
+                                                            type='text'
+                                                            className="form-control"
+                                                            placeholder='SKU Description'/>
+                                                    </td>
+                                                    <td style={{width: '20px'}}>
+                                                        <button onClick={this.onClickAddSKU} className='btn btn-primary' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-plus"></i></button>
+                                                    </td>
+                                                </tr> 
+                                                {this.state.SKUs.map((item) => {
+            return (<tr key={item.id}>
+                    <th scope="row">{item.id}</th>
+                    <td>{item.name}</td>
+                    <td>{item.status}</td>
+                    <td>{item.description}</td>
+                    <td style={{width: '20px'}}>
+                        <button className='btn btn-success' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-edit"></i></button>
+                        <button className='btn btn-danger' style={{width: '55px'}}><i className="fa fa-trash"></i></button>
+                    </td>
+            </tr>)
+        })}
+                                            </tbody>
+                                        </Table>
+                                        <div className="float-right"><Pagination /></div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                        {/* <div className="float-right col col-md-3">
+                            <button type="submit" className="btn btn-success btn-save" style={{ width: '100px' }}>Save</button>
+                            <button type="button" className="btn btn-warning btn-cancel" style={{ width: '100px' }}>Cancel</button>
+                        </div> */}
+                    </FormOfMik>
+                </Formik>
             </Aux>
         );
     }
@@ -323,7 +402,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createProduct:(product) => dispatch(productAction.createProduct(product)),
+        createProduct: (product) => dispatch(productAction.createProduct(product)),
     }
 };
 
