@@ -7,7 +7,8 @@ export const webComunication = {
     get,
     post,
     put,
-    deleteDetail
+    deleteDetail,
+    postCreate
 };
 
 function get(apiEndpoint, payload){
@@ -24,6 +25,17 @@ function get(apiEndpoint, payload){
 
 function post(apiEndpoint, payload){
     return axios.post(config.baseUrl+apiEndpoint, payload, getOptions()).then((response)=>{
+        return response;
+    }).catch((err)=>{
+        console.log(err);
+        if(err.status === 401) {
+            endToken();
+        }
+    })
+}
+
+function postCreate(apiEndpoint, payload){
+    return axios.post(config.baseUrl+apiEndpoint, payload, getOptionsCreate()).then((response)=>{
         return response;
     }).catch((err)=>{
         console.log(err);
@@ -60,6 +72,20 @@ function getOptions(payload){
     if(localStorage.getItem('token')){
         // options.headers = { 'x-access-token': localStorage.getItem('token') };
         options.headers = { 'Authorization': localStorage.getItem('token') };
+        
+    }
+    options.params = payload ? payload.params : {};
+    return options;
+}
+
+function getOptionsCreate(payload){
+    let options = {}; 
+    if(localStorage.getItem('token')){
+        // options.headers = { 'x-access-token': localStorage.getItem('token') };
+        options.headers = { 'Authorization': localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        };
         
     }
     options.params = payload ? payload.params : {};
