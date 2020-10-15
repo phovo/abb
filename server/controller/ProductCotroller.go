@@ -1,22 +1,37 @@
 package controller
 
 import (
+	"abbp/dto"
 	"abbp/model"
 	"abbp/response"
 	"abbp/service"
 	"abbp/utils"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Createproduct controller
 func CreateProduct(context *gin.Context) {
-	var product model.Product
-	err := context.ShouldBindJSON(&product)
+	var productDTO dto.Product
+	err := context.ShouldBindJSON(&productDTO)
 	if err != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.INFO_PRODUCT_INVALID)
 		return
+	}
+
+	layout := "YYYY-MM-dd"
+	EffectiveDate, _ := time.Parse(layout, productDTO.EffectiveDate)
+	ExpiredDate, _ := time.Parse(layout, productDTO.ExpiredDate)
+	product := model.Product{
+		Name:          productDTO.Name,
+		Status:        productDTO.Status,
+		EffectiveDate: EffectiveDate,
+		ExpiredDate:   ExpiredDate,
+		Type:          productDTO.Type,
+		File:          productDTO.Attachments,
+		SKUs:          productDTO.SKUs,
 	}
 	product.Prepare()
 	errValidate := product.Validate()
@@ -36,7 +51,7 @@ func CreateProduct(context *gin.Context) {
 func GetProducts(context *gin.Context) {
 	page := context.DefaultQuery("page", utils.PAGE_DEFAULT)
 	size := context.DefaultQuery("size", utils.SIZE_DEFAULT)
-	textSearch := context.DefaultQuery("textSearch", utils.VALUE_EMPTY)
+	textSearch := context.DefaultQuery("searchText", utils.VALUE_EMPTY)
 	operationResult := service.GetProducts(page, size, textSearch)
 	if operationResult.Error != nil {
 		response.ERROR(context, http.StatusBadRequest, utils.NOT_FOUND_ENTITY)
