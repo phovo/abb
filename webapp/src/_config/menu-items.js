@@ -26,9 +26,11 @@ export default {
                     title: 'Product Table',
                     type: 'item',
                     icon: 'feather icon-server',
-                    url: '/product'
+                    url: '/productlist'
                 }
             ]
         }
+        
+        
     ]
 }

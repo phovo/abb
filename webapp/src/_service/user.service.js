@@ -20,7 +20,7 @@ function login(username, password){
                 localStorage.setItem('token', response.data.data);
                 localStorage.setItem('auth', username);
                 dispatch(setUserDetails(response.data));
-                history.push('/product');
+                history.push('/productlist');
             }
         }).catch((error) => {
             dispatch(loginFail());

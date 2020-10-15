@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { productAction } from '../../_actions/product.action'
-import { Redirect } from 'react-router';
 
 class ProductList extends Component {
     state = {
@@ -34,7 +33,6 @@ class ProductList extends Component {
         })
     }
     render() {
-        console.log('===== product:',this.props.product)
         return (
             <Aux>
                 <ToastContainer toastClassName='alert alert-danger' />
@@ -44,7 +42,7 @@ class ProductList extends Component {
                             <Card.Header>
                                 <Row>
                                     <Col md='9' xs='9'> <Card.Title as="h3">Product List</Card.Title></Col>
-                                    <Col md='3' xs='3'><Button href="/createsku">Create new SKU</Button></Col>
+                                    <Col md='3' xs='3'><Button href="/product">Create new Product</Button></Col>
                                 </Row>
                                 {/* <span className="d-block m-t-5">use bootstrap <code>Table</code> component</span> */}
                             </Card.Header>
