@@ -420,6 +420,7 @@ class ProductList extends React.Component {
             // <div>abc</div>
         }
     }
+    
 }
 
 const mapStateToProps = state => {

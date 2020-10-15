@@ -13,6 +13,7 @@ function getProduct(page, text){
         webComunication.get(PRODUCT_API, {params: {page: page, searchText: text}})
         .then((response)=>{
             dispatch(changeProductsList(response.data));
+            console.log('====response data product:', response.data)
         }).catch((err)=>{
             dispatch(getProductListFail());
         })
@@ -42,14 +43,14 @@ function deleteProductById(id, page, text){
     };
 }
 
-export function changeProductsList(sku){
+export function changeProductsList(product){
     return{
         type: FETECHED_ALL_PRODUCT,
-        sku: sku.data.items,
-        page: sku.data.page,
-        totalPage: sku.data.totalPage,
-        size: sku.data.size,
-        searchText: sku.data.searchText
+        product: product.data.items,
+        page: product.data.page,
+        totalPage: product.data.totalPage,
+        size: product.data.size,
+        searchText: product.data.searchText
     }
 }
 
