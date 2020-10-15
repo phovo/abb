@@ -49,7 +49,7 @@ class SKUList extends React.Component {
                             </Card.Header>
                             <Card.Body>
                                 <SearchBox search={this.search}/>
-                                <BootstrapTable data={data} delete={this.delete.bind(this)}/>
+                                <BootstrapTable data={data} edit={this.props.sku.editSKU} delete={this.delete.bind(this)}/>
                                 <div className="float-right"><Pagination page={page} totalPage={totalPage} changePage={this.changePage}/></div>
                                 
                             </Card.Body>
