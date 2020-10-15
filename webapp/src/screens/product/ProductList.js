@@ -24,7 +24,7 @@ class ProductList extends Component {
             return <tr key ={index}>
                 <td scope ="row">{item.id}</td>
                 <td>{item.name}</td>
-                <td>{item.status}</td>
+                <td>{item.status?'Active':'Inactive'}</td>
                 <td>{item.type}</td>
                 <td>{item.effectiveDate}</td>
                 <td>{item.expiredDate}</td>
