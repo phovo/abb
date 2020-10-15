@@ -24,8 +24,8 @@ class ProductList extends React.Component {
     constructor(props) {
         super(props);
         this.statusOption = [
-            { value: 'true', label: 'Active' },
-            { value: 'false', label: 'Inactive' },
+            { value: true, label: 'Active' },
+            { value: false, label: 'Inactive' },
         ];
 
         this.typesOption = [
@@ -110,13 +110,6 @@ class ProductList extends React.Component {
     }
 
     onClickAddProduct = () => {
-        if (this.state.status == '' || this.state.type == '' || this.state.effectiveDate == undefined) {
-            document.getElementById('notify').innerHTML = 'error';
-            document.getElementById('notify').style.display = 'block';
-        } else {
-            document.getElementById('notify').style.display = 'block';
-        }
-        
     }
 
     validationSchema = Yup.object().shape({
@@ -139,7 +132,11 @@ class ProductList extends React.Component {
             this.objSKU.name = event.target.value;
             this.showError(false, 'SKUName');
         } else if(event.target.name === 'status') {
-            this.objSKU.status = event.target.value;
+            let parse = false;
+            if (event.target.value === 'true') {
+                parse = true
+            } 
+            this.objSKU.status = parse;
         } else if(event.target.name === 'description') {
             this.objSKU.description = event.target.value;
             this.showError(false, 'SKUDescription');
@@ -327,6 +324,7 @@ class ProductList extends React.Component {
                                                 <div className='form-group col-md-12 float-right'>
                                                     <button className="form-control btn btn-primary btn-add-product col col-md-3" type='button' onClick={this.onClickAddProduct}>Add</button>
                                                     <span className='' style={{marginLeft: '150px', color: 'green', display: 'none'}} id='notify-add-product'>Add product success</span>
+                                                    <span className='' style={{marginLeft: '150px', color: 'red', display: 'none'}} id='notify-error-add'>Add product error</span>
                                                 </div>
                                             </Row>
                                         </Card.Body>
