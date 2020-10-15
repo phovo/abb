@@ -39,11 +39,11 @@ class ProductList extends Component {
                 <td>{item.effectiveDate}</td>
                 <td>{item.expiredDate}</td>
                 <td style={{ width: '20px' }}>
-                    <Button className='btn btn-success' href={`/productedit/${item.id}`} style={{ marginRight: '10px' }}>
+                    <Button className='btn btn-success' href={`/productedit/${item.id}`} style={{ marginRight: '10px', width: '55px' }}>
                         <i className="fa fa-edit"></i>
                     </Button>
 
-                    <button className='btn btn-danger' onClick={()=>{this.props.deleteProduct(item.id)}} >
+                    <button className='btn btn-danger' onClick={()=>{this.props.deleteProduct(item.id)}} style={{ width: '55px' }} >
                         <i className="fa fa-trash"></i>
                     </button>
                 </td>
@@ -59,9 +59,9 @@ class ProductList extends Component {
                     <Col>
                         <Card>
                             <Card.Header>
-                                <Row>
+                                <Row >
                                     <Col md='9' xs='9'> <Card.Title as="h3">Product List</Card.Title></Col>
-                                    <Col md='3' xs='3'><Button href="/createproduct">Create new Product</Button></Col>
+                                    <Col md='3' xs='3'><Button className="float-right" href="/createproduct">Create new Product</Button></Col>
                                 </Row>
                                 {/* <span className="d-block m-t-5">use bootstrap <code>Table</code> component</span> */}
                             </Card.Header>
