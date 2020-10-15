@@ -117,6 +117,12 @@ class ProductList extends React.Component {
         }
     }
 
+    onClickCancelProduct = () => {
+        this.setState({
+            SKUs: []
+        });
+    }
+
     validationSchema = Yup.object().shape({
         name: Yup.string().required(() => {
             this.showError(true, 'inputName');
@@ -210,6 +216,7 @@ class ProductList extends React.Component {
                 expiredDate: new Date()
             });
             console.log(response);
+            window.location.href = "/productlist";
         } else {
             console.log('form invalid');
         }
@@ -348,7 +355,7 @@ class ProductList extends React.Component {
                                             <Col md='3' xs='3'>
                                                 <div className='float-right'>
                                                     <button type='submit' onClick={this.onClickSaveProduct} className='btn btn-success' style={{width: '100px'}}>Save</button>
-                                                    <button type='button' className='btn btn-warning' style={{width: '100px'}}>Cancel</button>
+                                                    <button type='button' onClick={this.onClickCancelProduct} className='btn btn-warning' style={{width: '100px'}}>Cancel</button>
                                                 </div>
                                             </Col>
                                         </Row>
