@@ -1,11 +1,10 @@
 import React from 'react';
-import { Row, Col, Card, Form, Button, InputGroup, FormControl, DropdownButton, Dropdown, Pagination, Table } from 'react-bootstrap';
+import { Row, Col, Card, Form, Pagination, Table } from 'react-bootstrap';
 import { FastField, Form as FormOfMik, Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
 import Select from 'react-select';
-import moment from 'moment';
 import Aux from "../../hoc/_Aux";
 import './Product.css'
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,8 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { productAction } from '../../_actions/product.action'
-import SKUList from '../sku/SKUList';
-import BootstrapTable from '../../_components/Tables/BootstrapTable';
 class ProductList extends React.Component {
 
     statusOption = [];
@@ -127,10 +124,12 @@ class ProductList extends React.Component {
     onChangeInputSKU = (event) => {
         if(event.target.name === 'name') {
             this.objSKU.name = event.target.value;
+            this.showError(false, 'SKUName');
         } else if(event.target.name === 'status') {
             this.objSKU.status = event.target.value;
         } else if(event.target.name === 'description') {
             this.objSKU.description = event.target.value;
+            this.showError(false, 'SKUDescription');
         }
     }
 
@@ -146,6 +145,9 @@ class ProductList extends React.Component {
                 description: ''
             }
             this.forceUpdate();
+        } else {
+            this.showError(true, 'SKUName');
+            this.showError(true, 'SKUDescription');
         }
     }
 
@@ -311,6 +313,12 @@ class ProductList extends React.Component {
                                     <Card.Header>
                                         <Row>
                                             <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
+                                            <Col md='3' xs='3'>
+                                                <div className='float-right'>
+                                                    <button className='btn btn-success'>Save</button>
+                                                    <button className='btn btn-warning'>Cancel</button>
+                                                </div>
+                                            </Col>
                                         </Row>
                                     </Card.Header>
                                     <Card.Body>
