@@ -21,9 +21,9 @@ func CreateProduct(context *gin.Context) {
 		return
 	}
 
-	layout := "YYYY-MM-dd"
-	EffectiveDate, _ := time.Parse(layout, productDTO.EffectiveDate)
-	ExpiredDate, _ := time.Parse(layout, productDTO.ExpiredDate)
+	EffectiveDate, _ := time.Parse(time.RFC3339, productDTO.EffectiveDate)
+	ExpiredDate, _ := time.Parse(time.RFC3339, productDTO.ExpiredDate)
+
 	product := model.Product{
 		Name:          productDTO.Name,
 		Status:        productDTO.Status,

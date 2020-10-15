@@ -7,8 +7,12 @@ import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { productAction } from '../../_actions/product.action'
+import { Redirect } from 'react-router';
 
 class ProductList extends Component {
+    state = {
+        id: 0,
+    }
 
 
     componentDidMount() {
@@ -39,7 +43,7 @@ class ProductList extends Component {
                         <Card>
                             <Card.Header>
                                 <Row>
-                                    <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
+                                    <Col md='9' xs='9'> <Card.Title as="h3">Product List</Card.Title></Col>
                                     <Col md='3' xs='3'><Button href="/createsku">Create new SKU</Button></Col>
                                 </Row>
                                 {/* <span className="d-block m-t-5">use bootstrap <code>Table</code> component</span> */}
