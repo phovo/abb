@@ -294,6 +294,7 @@ class ProductList extends React.Component {
                     </Col>
                 </Row>
                 <SKUList /> 
+                {/* <ProductList/> */}
                 <Row>
                     <Col>
                         <Card>  

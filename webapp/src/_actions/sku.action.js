@@ -1,11 +1,12 @@
 import {webComunication}  from '../_service/webcomunication.service';
 import {SKU_API} from '../_const/apis';
-import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR } from '../_const/actions';
+import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR, EDIT_SKU } from '../_const/actions';
 
 export const skuAction = {
     getSKU,
     deleteSKUById,
-    createSKU
+    createSKU,
+    updateSKU
 };
 
 function getSKU(page, text){
@@ -51,6 +52,25 @@ export function createSKU (sku){
         }).catch((err)=>{
             dispatch(saveSKUFAIL());
         })
+    }
+}
+
+//action editSKU
+export function updateSKU (skuID,page,text){
+    return dispatch =>{
+        webComunication.put(SKU_API,skuID)
+        .then((response)=>{
+            dispatch(editSKU(response.data));
+            dispatch(getSKU(page,text));
+        }).catch((err)=>{
+            alert('Update SKU Failed');
+        })
+    }
+}
+
+export function editSKU(){
+    return{
+        type: EDIT_SKU
     }
 }
 export function saveSKU (){

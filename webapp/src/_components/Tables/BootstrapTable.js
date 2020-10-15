@@ -1,9 +1,20 @@
 import React from 'react';
 import {Row, Table} from 'react-bootstrap';
-
+import {connect} from 'react-redux';
 import Aux from "../../hoc/_Aux";
+import { sku } from '../../_reducers/sku.reducer';
 
 class BootstrapTable extends React.Component {
+//     state ={
+//         skuEdit: {
+//         name : '',
+//         status :'',
+//         description:''
+//     }
+// }
+    handleEdit=(e)=>{
+        
+    }
     render() {
         return (
             <Aux>
@@ -23,7 +34,7 @@ class BootstrapTable extends React.Component {
                                 return (<tr key={d.id}>
                                     <th scope="row">{d.id}</th>
                                     <td>{d.name}</td>
-                                    <td>{d.status ? 'active' : 'inactive'}</td>
+                                    <td>{d.status ? 'Active' : 'Inactive'}</td>
                                     <td>{d.description}</td>
                                     <td style={{width: '20px'}}><button className='btn btn-success' style={{marginRight: '10px'}}><i className="fa fa-edit"></i>
                                     </button><button className='btn btn-danger' onClick={() => this.props.delete(d.id)}><i className="fa fa-trash"></i></button></td>
@@ -37,4 +48,11 @@ class BootstrapTable extends React.Component {
     }
 }
 
-export default BootstrapTable;
+const mapStateToProps=state=>{
+    return {
+        sku: state.sku,
+        skuEdit: state.skuEdit
+    }
+}
+
+export default connect(mapStateToProps)(BootstrapTable);

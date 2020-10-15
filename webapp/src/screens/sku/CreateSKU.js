@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Form, Button, InputGroup, FormControl, DropdownButton, Dropdown } from 'react-bootstrap';
-import { FastField, Form as FormOfMik, Formik, yupToFormErrors } from "formik";
+import { Row, Col, Card, Form ,FormControl} from 'react-bootstrap';
+import {  Form as FormOfMik, Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from 'react-datepicker';
 import * as Yup from 'yup';
-import Select from 'react-select';
-import moment from 'moment';
 import Aux from "../../hoc/_Aux";
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { sku } from '../../_reducers/sku.reducer';
 import { skuAction } from '../../_actions/sku.action';
+import SKUList from './SKUList';
 
 class CreateSKU extends Component {
 
@@ -84,8 +79,8 @@ class CreateSKU extends Component {
                                                 name='status'
                                                 id='inputStatus'
                                                 className="form-control-md">
-                                                <option value="1" selected="true">Active</option>
-                                                <option value="0">Inactive</option>
+                                                <option value={true} selected="true">Active</option>
+                                                <option value={false}>Inactive</option>
                                             </FormControl>
                                         </Form.Group>
 
@@ -98,10 +93,7 @@ class CreateSKU extends Component {
                                             <FormControl as="textarea" onChange={this.handleChange}
                                                 type="text"
                                                 className="form-control datepicker"
-                                                id="inputEffectiveDate"
                                                 name="description"
-                                                dateFormat="MMMM d, yyyy h:mm aa"
-                                                showTimeSelect
                                             />
                                         </Form.Group>
                                     </Col>
@@ -120,6 +112,7 @@ class CreateSKU extends Component {
                         </Card>
                     </Col>
                 </Row>
+                <SKUList/>
                 </FormOfMik>
                 </Formik>
             </Aux>
@@ -131,7 +124,8 @@ const mapStateToProps = state => {
         layout: state.reducer.layout,
         isOpen: state.reducer.isOpen,
         isTrigger: state.reducer.isTrigger,
-        sku: state.sku
+        sku: state.sku,
+        skuEdit : state.skuEdit
     }
 }
 

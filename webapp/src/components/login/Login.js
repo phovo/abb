@@ -29,7 +29,15 @@ export default class Login extends Component {
         password: Yup.string()
           .required('Required'),
     });
-
+    state ={
+        username: ''
+    }
+    handleChange =(e)=>{
+        let {name,value} = e.target;
+        this.setState({
+            [name]:value
+        })
+    }
     render() {
         return (
             <Formik
