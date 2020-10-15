@@ -126,7 +126,7 @@ class CreateSKU extends Component {
                                     <Col>
                                         <Card>
                                             <Card.Body>
-                                                <div className="float-right"><button type="submit" className="btn btn-success btn-save" onSubmit={this.handleSubmit}>Save</button>
+                                                <div className="float-right"><button type="submit" className="btn btn-success btn-save"  onSubmit={this.handleSubmit}>Save</button>
                                                     <button type="button" className="btn btn-danger btn-cancel" style={{ width: '100px' }}>Cancel</button></div>
                                             </Card.Body>
                                         </Card>
