@@ -14,7 +14,7 @@ type Product struct {
 	EffectiveDate time.Time `json:"effectiveDate" gorm:"type:timestamp"`
 	ExpiredDate   time.Time `json:"expiredDate" gorm:"type:timestamp"`
 	Type          string    `json:"type" gorm:"size:100" `
-	File          string    `json:"file" gorm:"size:100" `
+	File          string    `json:"file" `
 	SKUs          []SKU     `gorm:"many2many:product_sku;"`
 }
 
