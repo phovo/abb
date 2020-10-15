@@ -47,7 +47,6 @@ function deleteProductById(id,page,text){
         webComunication.deleteDetail(`${PRODUCT_API}/${id}`)
         .then((response)=>{
             dispatch(deleteProductsDetails());
-            console.log(deleteProductsDetails());
             dispatch(productAction.getProduct(page, text));
         }).catch((err) => {
             dispatch(deleteProductFail());

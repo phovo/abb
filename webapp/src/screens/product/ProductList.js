@@ -11,6 +11,8 @@ import {DELETE_SUCCESSFULLY} from '../../_const/message'
 import { Redirect, withRouter } from 'react-router';
 import { history } from '../../_helpers/history';
 import ProductEdit from './ProductEdit';
+import {moment} from 'moment';
+
 
 class ProductList extends Component {
     state = {
@@ -47,8 +49,8 @@ class ProductList extends Component {
                 <td>{item.name}</td>
                 <td>{item.status?'Active':'Inactive'}</td>
                 <td>{item.type}</td>
-                <td>{item.effectiveDate}</td>
-                <td>{item.expiredDate}</td>
+                <td>{item.effectiveDate.split("T")[0]}</td>
+                <td>{item.expiredDate.split('T')[0]}</td>
                 <td style={{ width: '20px' }}>
                     <button className='btn btn-success' style={{ marginRight: '10px' }} onClick={(val) => this.onClickEdit(item.id)}>
                         <i className="fa fa-edit"></i>
@@ -67,7 +69,7 @@ class ProductList extends Component {
                 />
             )
         }
-        console.log('===== product:',this.props.product)
+        const {page, totalPage} = this.props.product;
         return (
             <Aux>
                 <ToastContainer toastClassName='alert alert-danger' />
@@ -101,7 +103,7 @@ class ProductList extends Component {
                                         </tbody>
                                     </Table>
                                 </Row>
-                                <div className="float-right"><Pagination  /></div>
+                                <div className="float-right"><Pagination page={page} totalPage={totalPage} changePage={this.changePage}/></div>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -114,6 +116,12 @@ class ProductList extends Component {
     }
     delete(id) {
         this.props.deleteProduct(id, this.props.product.page, this.props.product.searchText);
+    }
+    changePage = (page) => {
+        this.getProduct(page, this.props.product.searchText);
+    }
+    search = (value) => {
+        this.getProduct(this.props.product.page, value);
     }
 }
 
