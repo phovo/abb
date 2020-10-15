@@ -1,12 +1,17 @@
 import {webComunication}  from '../_service/webcomunication.service';
 import {SKU_API} from '../_const/apis';
-import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR, EDIT_SKU } from '../_const/actions';
+import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR, EDIT_SKU,
+    FETECHED_SKU_DETAILS_ERROR, FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS } from '../_const/actions';
+import { history } from '../_helpers/history';
 
 export const skuAction = {
     getSKU,
     deleteSKUById,
     createSKU,
-    updateSKU
+    updateSKU,
+    getSkuDetails,
+    handleChange,
+    updateSKUDetails
 };
 
 function getSKU(page, text){
@@ -33,6 +38,35 @@ function deleteSKUById(id, page, text){
     };
 }
 
+function getSkuDetails(id) {
+    return dispatch => {
+        webComunication.get(`${SKU_API}/${id}`)
+        .then((response)=>{
+            dispatch(getSKUsDetailsSucess(response.data));
+        }).catch((err) => {
+            history.push('/sku');
+        })
+    };
+}
+
+function handleChange(name, value) {
+    return dispatch => { 
+        dispatch(setSkuProps(name, value));
+    }
+}
+
+function updateSKUDetails(sku) {
+    return dispatch => {
+        webComunication.put(`${SKU_API}/${sku.id}`, sku)
+        .then((response)=>{
+            console.log(response.data);
+            history.push('/sku');
+        }).catch((err) => {
+            dispatch(saveSKUFAIL());
+        })
+    };
+}
+
 export function changeSKUsList(sku){
     return{
         type: FETECHED_ALL_SKU,
@@ -48,7 +82,7 @@ export function createSKU (sku){
     return dispatch =>{
         webComunication.post(SKU_API,sku)
         .then((response)=>{
-            dispatch(saveSKU(response.data));
+            history.push('/sku');
         }).catch((err)=>{
             dispatch(saveSKUFAIL());
         })
@@ -67,6 +101,8 @@ export function updateSKU (skuID,page,text){
         })
     }
 }
+
+//
 
 export function editSKU(){
     return{
@@ -100,5 +136,32 @@ export function getSKUListFail(){
 export function deleteSKUFail(){
     return{
         type: DELETE_SKU_ERROR
+    }
+}
+
+export function getSKUsDetailsSucess(action) {
+    return {
+        type: FETECHED_SKU_DETAILS,
+        name: action.data.name,
+        id: action.data.id,
+        description: action.data.description,
+        Status: action.data.Status
+    }
+}
+
+export function getSKUsDetailsFail() {
+    return {
+        type: FETECHED_SKU_DETAILS_ERROR
+    }
+}
+
+export function setSkuProps(name, value) {
+    console.log('====================================');
+    console.log('name', name, value);
+    console.log('====================================');
+    return {
+        type: CHANGE_SKU_PROPS,
+        props: name,
+        value: value
     }
 }

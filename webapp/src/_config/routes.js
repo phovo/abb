@@ -17,7 +17,8 @@ const routes = [
     { path: '/createproduct', exact: true, name: 'Documentation', component: CreateProduct },
     { path: '/createsku',exact:true,name:'Documentation',component:CreateSKU},
     { path: '/productlist', exact :true,name:'Documentation',component: ProductList},
-    { path: '/productedit', exact :true,name:'Documentation',component: ProductEdit}
+	{ path: '/productedit', exact :true,name:'Documentation',component: ProductEdit},
+    { path: '/editsku/:id',exact:true,name:'Documentation',component:CreateSKU}
 ];
 
 export default routes;

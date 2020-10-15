@@ -36,8 +36,8 @@ class BootstrapTable extends React.Component {
                                     <td>{d.name}</td>
                                     <td>{d.status ? 'Active' : 'Inactive'}</td>
                                     <td>{d.description}</td>
-                                    <td style={{width: '20px'}}><button className='btn btn-success' style={{marginRight: '10px'}}><i className="fa fa-edit"></i>
-                                    </button><button className='btn btn-danger' onClick={() => this.props.delete(d.id)}><i className="fa fa-trash"></i></button></td>
+                                    <td style={{width: '20px'}}><a href={`/editSKU/${d.id}`}><button className='btn btn-success' style={{marginRight: '10px'}}><i className="fa fa-edit"></i>
+                                    </button></a><button className='btn btn-danger' onClick={() => this.props.delete(d.id)}><i className="fa fa-trash"></i></button></td>
                                 </tr>)
                             })}
                         </tbody>

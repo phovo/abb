@@ -24,8 +24,7 @@ class App extends Component {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={props => ( localStorage.getItem('token') ? 
-                      <Redirect to={{ pathname: '/sku', state: { from: props.location } }}/> :
+                  render={props => (
                       <route.component {...props} />
                   )} />
           ) : (null);
@@ -37,10 +36,7 @@ class App extends Component {
                         <Router history={history}>
                         <Switch>
                             {menu}
-                            <Route path="/" render={props => ( localStorage.getItem('token') ? 
-                            <AdminLayout />:
-                      <Redirect to={{ pathname: '/login', state: { from: props.location } }}/>
-                  )}
+                            <Route path="/" component={AdminLayout}
                              />
                         </Switch>
                         </Router>
