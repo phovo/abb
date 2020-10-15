@@ -3,7 +3,6 @@ import {Dropdown} from 'react-bootstrap';
 
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
-import DEMO from "../../../../../_const/constant";
 
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import {userService} from '../../../../../_service/user.service'

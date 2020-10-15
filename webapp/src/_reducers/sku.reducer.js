@@ -19,7 +19,7 @@ export function sku(state = initialState, action) {
                 ...state,
                 sku: action.sku,
                 page: action.page,
-                totalPages: action.totalPages,
+                totalPage: action.totalPage,
                 size: action.size,
                 searchText: action.searchText,
                 isError: false

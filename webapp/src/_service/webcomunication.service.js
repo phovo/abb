@@ -1,6 +1,7 @@
 import axios from 'axios';
 import config from '../_config/config';
 import { userService } from './user.service';
+import { history } from '../_helpers/history';
 
 export const webComunication = {
     get,
@@ -16,7 +17,7 @@ function get(apiEndpoint, payload){
         console.log("Error in response");
         console.log(err);
         if(err.status === 401) {
-            userService.logout();
+            endToken();
         }
     })
 }
@@ -27,7 +28,7 @@ function post(apiEndpoint, payload){
     }).catch((err)=>{
         console.log(err);
         if(err.status === 401) {
-            userService.logout();
+            endToken();
         }
     })
 }
@@ -38,7 +39,7 @@ function put(apiEndpoint, payload){
     }).catch((err)=>{
         console.log(err);
         if(err.status === 401) {
-            userService.logout();
+            endToken();
         }
     })
 }
@@ -49,7 +50,7 @@ function deleteDetail(apiEndpoint){
     }).catch((err)=>{
         console.log(err);
         if(err.status === 401) {
-            userService.logout();
+            endToken();
         }
     })
 }
@@ -63,4 +64,10 @@ function getOptions(payload){
     }
     options.params = payload ? payload.params : {};
     return options;
+}
+
+function endToken() {
+    localStorage.setItem('token', null);
+    localStorage.setItem('auth', null);
+    history.push('/login');
 }

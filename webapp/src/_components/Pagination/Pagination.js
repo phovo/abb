@@ -22,15 +22,13 @@ class Paginations extends React.Component {
                 <Row>
                     <Col md={12}>
                         <Pagination onClick={this.click}>
-                            <Pagination.First disabled={this.props.page === 1} />
-                            <Pagination.Prev disabled={this.props.page === 1} />
+                            <Pagination.First disabled={this.props.page === 1} >First</Pagination.First>
+                            <Pagination.Prev disabled={this.props.page === 1} >Prev</Pagination.Prev>
                             {pages.map((i) => {
                                 return(<Pagination.Item active={i === this.props.page} key={i} >{i}</Pagination.Item>)
-                            })}
-                            
-                           
-                            <Pagination.Next disabled={this.props.page === this.props.totalPage}/>
-                            <Pagination.Last disabled={this.props.page === this.props.totalPage} />
+                            })}                           
+                            <Pagination.Next disabled={this.props.page === this.props.totalPage}> Next</Pagination.Next>
+                            <Pagination.Last disabled={this.props.page === this.props.totalPage}> Last</Pagination.Last>
                         </Pagination>
                     </Col>
                 </Row>
@@ -59,7 +57,7 @@ class Paginations extends React.Component {
             number = this.props.totalPage;
         } else if(e.target.textContent.indexOf('First') !== -1 ) {
             number = 1;
-        } else if(e.target.textContent.indexOf('Previous') !== -1) {
+        } else if(e.target.textContent.indexOf('Prev') !== -1) {
             number = this.props.page - 1 ;
         } else if(e.target.textContent.indexOf('Next') !== -1) {
             number = this.props.page + 1 ;

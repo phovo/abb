@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Switch, Route, Router } from 'react-router-dom';
+import { Switch, Route, Router, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 import '../../node_modules/font-awesome/scss/font-awesome.scss';
@@ -24,12 +24,12 @@ class App extends Component {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={props => (
+                  render={props => ( localStorage.getItem('token') ? 
+                      <Redirect to={{ pathname: '/sku', state: { from: props.location } }}/> :
                       <route.component {...props} />
                   )} />
           ) : (null);
         });
-
         return (
             <Aux>
                 <ScrollToTop>
@@ -37,7 +37,11 @@ class App extends Component {
                         <Router history={history}>
                         <Switch>
                             {menu}
-                            <Route path="/" component={AdminLayout} />
+                            <Route path="/" render={props => ( localStorage.getItem('token') ? 
+                            <AdminLayout />:
+                      <Redirect to={{ pathname: '/login', state: { from: props.location } }}/>
+                  )}
+                             />
                         </Switch>
                         </Router>
                     </Suspense>
@@ -45,6 +49,7 @@ class App extends Component {
             </Aux>
         );
     }
+   
 }
 
 export default App;

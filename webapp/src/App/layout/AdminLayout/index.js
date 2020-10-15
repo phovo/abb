@@ -11,6 +11,7 @@ import Loader from "../Loader";
 import routes from "../../../_config/routes";
 import Aux from "../../../hoc/_Aux";
 import * as actionTypes from "../../../_const/actions";
+import { withRouter } from 'react-router-dom';
 
 import './app.scss';
 
@@ -49,8 +50,8 @@ class AdminLayout extends Component {
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
-                    render={props => (
-                        <route.component {...props} />
+                    render={props => ( 
+                        <route.component {...props} /> 
                     )} />
             ) : (null);
         });
