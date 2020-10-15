@@ -17,17 +17,6 @@ class ProductList extends Component {
         id: 0,
     }
 
-    onClickEdit = (idProduct) => {
-        this.setState({
-            id: idProduct
-        })
-        return (
-        
-            <ProductEdit />
-            )
-        
-    }
-
     componentDidMount() {
         this.getProduct(1, "");
     }
@@ -50,23 +39,18 @@ class ProductList extends Component {
                 <td>{item.effectiveDate}</td>
                 <td>{item.expiredDate}</td>
                 <td style={{ width: '20px' }}>
-                    <button className='btn btn-success' style={{ marginRight: '10px' }} onClick={(val) => this.onClickEdit(item.id)}>
+                    <Button className='btn btn-success' href={`/productedit/${item.id}`} style={{ marginRight: '10px' }}>
                         <i className="fa fa-edit"></i>
-                </button><button className='btn btn-danger' onClick={()=>{this.props.deleteProduct(item.id)}} ><i className="fa fa-trash"></i></button></td>
+                    </Button>
+
+                    <button className='btn btn-danger' onClick={()=>{this.props.deleteProduct(item.id)}} >
+                        <i className="fa fa-trash"></i>
+                    </button>
+                </td>
             </tr>
         })
     }
     render() {
-        if (this.state.id !== 0) {
-            return (
-                <Redirect
-                    to = {{
-                        pathname: '/productedit',
-                        state: {key: this.state.id}
-                    }}
-                />
-            )
-        }
         console.log('===== product:',this.props.product)
         return (
             <Aux>

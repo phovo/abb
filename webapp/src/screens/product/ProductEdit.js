@@ -6,33 +6,70 @@ import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import Aux from "../../hoc/_Aux";
 import './Product.css'
-import { productAction } from '../../_actions/product.action';
-import { withRouter } from 'react-router';
-import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import { webComunication } from '../../_service/webcomunication.service';
+import { PRODUCT_API } from '../../_const/apis';
 
 class ProductEdit extends Component {
     constructor(props) {
-        // window.location.reload();
         super(props);
-        console.log("123123123");
-        // let id = this.props.location.state.key;
-        // console.log(id);
-        // this.getProduct(id)
+        this.getProductById(this.props.match.params.id);
     }
 
-    getProduct(id) {
-        this.props.getProduct(id);
+    statusOption = [
+        { value: true, label: 'Active' },
+        { value: false, label: 'Inactive' },
+    ];
+
+    typesOption = [
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+    ];
+
+    getProductById(id) {
+        let dataProduct = null;
+        webComunication.get(`${PRODUCT_API}/${id}`)
+            .then((response) => {
+                console.log(response);
+                dataProduct = response.data.data;
+                if (dataProduct !== null) {
+                    this.setState({
+                        id: dataProduct.id,
+                        name: dataProduct.name,
+                        status: dataProduct.status,
+                        type: dataProduct.type,
+                        effectiveDate: new Date(dataProduct.effectiveDate),
+                        expiredDate: new Date(dataProduct.expiredDate),
+                        file: dataProduct.file,
+                        SKUs: dataProduct.SKUs
+                    });                  
+                    this.setValue();
+                    console.log(this.state);
+                }
+            }).catch((err) => {
+                console.log('error');
+            })
+
     }
 
-    // shouldComponentUpdate(nextState, nextProps) {
-    //     if (!this.props.product.isError && nextState.product.isError) {
-    //         toast.error(nextState.product.messageError);
-    //     } else if (!this.props.product.isSuccess && nextState.product.isSuccess) {
-    //         toast.info(nextState.product.messageSuccess);
-    //     }
-    //     return true;
-    // }
-    
+    defaultInputValueStatus = () => {
+        return 'true'
+    }
+
+    onClickRemoveAttachments = () => {
+        this.setState({
+            file: ''
+        });
+        document.getElementById('showFileName').value = '';
+    }
+
+    setValue = () => {
+        document.getElementById("inputName").value = this.state.name;
+        document.getElementById("showFileName").value = this.state.file;
+        document.getElementById("inputStatus").value = this.state.status;
+        
+    }
+
     state = {
         id: 0,
         name: '',
@@ -40,7 +77,93 @@ class ProductEdit extends Component {
         effectiveDate: new Date(),
         expiredDate: new Date(),
         type: '',
-        attachments: null
+        file: null
+    }
+    getValueExpiredDate = (e) => {
+        this.setState({ expiredDate: e })
+    }
+
+    getValueEffectiveDate = (e) => {
+        if (e === null) {
+            this.showError(true, 'inputEffectiveDate');
+        }
+        this.setState({ effectiveDate: e })
+    }
+
+    getValueStatus = (obj) => {
+        if (obj.value !== undefined) {
+            this.showError(false, 'inputStatus');
+        }
+        this.setState({ status: obj.value });
+        console.log(this.state);
+        
+    }
+
+    getValueType = (obj) => {
+        if (obj.value !== undefined) {
+            this.showError(false, 'inputType')
+        }
+        this.setState({ type: obj.value })
+    }
+
+    getValueFile = (event) => {
+        const objectFile = event.target.files[0];
+        document.getElementById('showFileName').value = objectFile.name;
+        this.readURL(event.target, (e) => {
+            this.setState({ file: e.target.result });
+        });
+    }
+
+    readURL(input, onLoadCallback) {
+        if (input.files[0] && input.files) {
+            let reader = new FileReader();
+            reader.onload = onLoadCallback;
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    showError = (active, IdName) => {
+        if (active) {
+            document.getElementById(IdName).classList.add('is-invalid');
+        } else {
+            document.getElementById(IdName).classList.remove('is-invalid');
+        }
+    }
+
+    validationSchema = Yup.object().shape({
+        name: Yup.string().required(() => {
+            this.showError(true, 'inputName');
+        }),
+        status: Yup.string().required(() => {
+            this.showError(true, 'inputStatus');
+        }),
+        type: Yup.string().required(() => {
+            this.showError(true, 'inputType');
+        }),
+        effectiveDate: Yup.string().required(() => {
+            this.showError(true, 'inputEffectiveDate');
+        }),
+    })
+
+    handleSubmit = (data) => {
+        this.showError(false, 'inputName');
+        this.showError(false, 'inputStatus');
+        this.showError(false, 'inputType');
+        this.showError(false, 'inputEffectiveDate');
+        if (data.name !== '') {
+            this.setState({name: data.name});
+        }
+        this.state.effectiveDate = this.state.effectiveDate.toISOString();
+        this.state.expiredDate = this.state.expiredDate.toISOString();
+        console.log(this.state);
+        
+        webComunication.put(`${PRODUCT_API}/${this.state.id}`, this.state)
+            .then((response) => {
+                console.log(response);
+                window.location.href = "/productlist";
+            }).catch((err) => {
+                console.log('error');
+            })
     }
 
     render() {
@@ -48,12 +171,12 @@ class ProductEdit extends Component {
             <Aux>
                 <Formik
                     initialValues={{
-                        name: '',
-                        status: '',
-                        effectiveDate: new Date(),
-                        expiredDate: new Date(),
-                        type: '',
-                        attachments: null
+                        name: this.state.name,
+                        status: this.state.status,
+                        effectiveDate: this.state.effectiveDate,
+                        expiredDate: this.state.expiredDate,
+                        type: this.state.type,
+                        file: this.state.file,
                     }}
                     validationSchema={this.validationSchema}
                     onSubmit={this.handleSubmit}
@@ -63,7 +186,7 @@ class ProductEdit extends Component {
                             <Col>
                                 <Card>
                                     <Card.Header>
-                                        <Card.Title as="h3">Create new Product</Card.Title>
+                                        <Card.Title as="h3">Update Product</Card.Title>
                                     </Card.Header>
                                     <Card.Body>
 
@@ -76,7 +199,7 @@ class ProductEdit extends Component {
                                                         type='text'
                                                         className="form-control"
                                                         id="inputName"
-                                                        placeholder='Product name'
+                                                        placeholder={this.state.name}
                                                     />
                                                 </Form.Group>
 
@@ -132,10 +255,10 @@ class ProductEdit extends Component {
                                                 <Form.Group controlId="exampleForm.ControlInput1">
                                                     <Form.Label>Type(*)</Form.Label>
                                                     <Select
-                                                        id='inputType'
-                                                        name='type'
                                                         options={this.typesOption}
                                                         onChange={this.getValueType}
+                                                        id='inputType'
+                                                        name='type'
                                                         className="form-control-md" />
                                                 </Form.Group>
                                             </Col>
@@ -151,13 +274,13 @@ class ProductEdit extends Component {
                                             </Col>
 
                                             <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
-                                                <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
+                                                <input value={this.state.file} type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
                                                 <div className="input-group-append">
                                                     <button onClick={this.onClickRemoveAttachments} type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
                                                 </div>
                                             </div>
                                             <div className='form-group col-md-12 float-right'>
-                                                <button className="form-control btn btn-primary btn-add-product col col-md-3" type='button' onClick={this.onClickAddProduct} style={{width: '100px'}}>Add</button>
+                                                <button className="form-control btn btn-primary btn-add-product col col-md-3" type='submit' onClick={this.onClickAddProduct} style={{ width: '100px' }}>Add</button>
                                                 {/* <span className='' style={{ marginLeft: '150px', color: 'green', display: 'none', width: '100px' }} id='notify-add-product'>Add product success</span>
                                                 <span className='' style={{ marginLeft: '150px', color: 'red', display: 'none' }} id='notify-error-add'>Add product error</span> */}
                                             </div>
@@ -166,7 +289,7 @@ class ProductEdit extends Component {
                                 </Card>
                             </Col>
                         </Row>
-                   </FormOfMik>
+                    </FormOfMik>
                 </Formik>
             </Aux>
         );
@@ -178,13 +301,13 @@ class ProductEdit extends Component {
 //         layout: state.reducer.layout,
 //         isOpen: state.reducer.isOpen,
 //         isTrigger: state.reducer.isTrigger,
-//         product: state.product.product
+//         product: state.product.productEdit
 //     }
 // }
 
 // const mapDispatchToProps = dispatch => {
 //     return {
-//         getProduct: (id) => dispatch(productAction.getProductById(id))
+//         getProductById: (id) => dispatch(productAction.getProductById(id))
 //     }
 // }
 
