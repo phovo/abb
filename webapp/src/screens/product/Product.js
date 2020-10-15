@@ -153,6 +153,7 @@ class ProductList extends React.Component {
                 status: '0',
                 description: ''
             }
+            console.log(this.state);
             this.forceUpdate();
         } else {
             this.showError(true, 'SKUName');
@@ -394,10 +395,16 @@ class ProductList extends React.Component {
                                                     </td>
                                                 </tr>
                                                 {this.state.SKUs.map((item) => {
+                                                    let status = '';
+                                                    if (item.status) {
+                                                        status = 'true';
+                                                    } else {
+                                                        status = 'false';
+                                                    }
                                                     return (<tr key={item.id}>
                                                         <th scope="row">{item.id}</th>
                                                         <td>{item.name}</td>
-                                                        <td>{item.status}</td>
+                                                        <td>{status}</td>
                                                         <td>{item.description}</td>
                                                         <td style={{ width: '155px' }}>
                                                             <button className='btn btn-success' style={{ marginRight: '10px', width: '55px' }}><i className="fa fa-edit"></i></button>

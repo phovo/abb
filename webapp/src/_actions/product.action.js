@@ -19,6 +19,17 @@ function getProduct(page, text){
     };
 }
 
+function getProductById(id){
+    return dispatch => {
+        webComunication.get(PRODUCT_API, {params: {id}})
+        .then((response)=>{
+            dispatch(changeProductsList(response.data));
+        }).catch((err)=>{
+            dispatch(getProductListFail());
+        })
+    };
+}
+
 function createProduct(product) {
     return dispatch => {
         webComunication.post(PRODUCT_API, product)
