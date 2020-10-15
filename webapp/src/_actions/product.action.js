@@ -32,8 +32,9 @@ function getProductById(id){
 
 function createProduct(product) {
     return dispatch => {
-        webComunication.post(PRODUCT_API, product)
+        webComunication.postCreate(PRODUCT_API, product)
         .then((response)=>{
+            console.log(response);
             dispatch(saveProductSucess(response.data));
         }).catch((err)=>{
             dispatch(saveProductFail());

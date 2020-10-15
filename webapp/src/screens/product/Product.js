@@ -65,6 +65,7 @@ class ProductList extends React.Component {
         if (obj.value !== undefined) {
             this.showError(false, 'inputStatus')
         }
+        console.log(obj.value);
         this.setState({ status: obj.value })
     }
 
@@ -109,6 +110,11 @@ class ProductList extends React.Component {
     }
 
     onClickAddProduct = () => {
+        if (this.state.status === 'true') {
+            this.setState({status: true});
+        } else {
+            this.setState({status: false});
+        }
     }
 
     validationSchema = Yup.object().shape({
@@ -189,6 +195,7 @@ class ProductList extends React.Component {
 
             this.setState({
                 name: data.name,
+                attachments: "data:application//pdf;base64,JVBERi0xLjQKMSAwIG9iag"
             });
 
             this.state.effectiveDate = this.state.effectiveDate.toISOString();

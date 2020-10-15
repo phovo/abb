@@ -1,18 +1,38 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, Form } from 'react-bootstrap';
-import { FastField, Form as FormOfMik, Formik } from "formik";
+import { connect, FastField, Form as FormOfMik, Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import Aux from "../../hoc/_Aux";
 import './Product.css'
+import { productAction } from '../../_actions/product.action';
+import { withRouter } from 'react-router';
+import { toast } from 'react-toastify';
 
 class ProductEdit extends Component {
     constructor(props) {
+        // window.location.reload();
         super(props);
-        console.log(this.props.location.state.key);
+        console.log("123123123");
+        // let id = this.props.location.state.key;
+        // console.log(id);
+        // this.getProduct(id)
     }
 
+    getProduct(id) {
+        this.props.getProduct(id);
+    }
+
+    // shouldComponentUpdate(nextState, nextProps) {
+    //     if (!this.props.product.isError && nextState.product.isError) {
+    //         toast.error(nextState.product.messageError);
+    //     } else if (!this.props.product.isSuccess && nextState.product.isSuccess) {
+    //         toast.info(nextState.product.messageSuccess);
+    //     }
+    //     return true;
+    // }
+    
     state = {
         id: 0,
         name: '',
@@ -22,8 +42,6 @@ class ProductEdit extends Component {
         type: '',
         attachments: null
     }
-
-    // componentDidMount(props){console.log(this.props.location.state.id);}
 
     render() {
         return (
@@ -155,4 +173,20 @@ class ProductEdit extends Component {
     }
 }
 
-export default ProductEdit;
+// const mapStateToProps = state => {
+//     return {
+//         layout: state.reducer.layout,
+//         isOpen: state.reducer.isOpen,
+//         isTrigger: state.reducer.isTrigger,
+//         product: state.product.product
+//     }
+// }
+
+// const mapDispatchToProps = dispatch => {
+//     return {
+//         getProduct: (id) => dispatch(productAction.getProductById(id))
+//     }
+// }
+
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProductEdit));
+export default ProductEdit
