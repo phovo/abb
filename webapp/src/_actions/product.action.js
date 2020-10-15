@@ -13,7 +13,6 @@ function getProduct(page, text){
         webComunication.get(PRODUCT_API, {params: {page: page, searchText: text}})
         .then((response)=>{
             dispatch(changeProductsList(response.data));
-            console.log('====response data product:', response.data)
         }).catch((err)=>{
             dispatch(getProductListFail());
         })
@@ -42,11 +41,12 @@ function createProduct(product) {
     };
 }
 
-function deleteProductById(id, page, text){
+function deleteProductById(id,page,text){
     return dispatch => {
         webComunication.deleteDetail(`${PRODUCT_API}/${id}`)
         .then((response)=>{
             dispatch(deleteProductsDetails());
+            console.log(deleteProductsDetails());
             dispatch(productAction.getProduct(page, text));
         }).catch((err) => {
             dispatch(deleteProductFail());

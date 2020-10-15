@@ -4,9 +4,10 @@ import SearchBox from '../../_components/SearchBox/SearchBox'
 import Pagination from '../../_components/Pagination/Pagination'
 import { Row, Col, Card, Button, Table } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { productAction } from '../../_actions/product.action'
+import { productAction } from '../../_actions/product.action';
+import { ToastContainer, toast } from 'react-toastify';
+import {DELETE_SUCCESSFULLY} from '../../_const/message'
 
 class ProductList extends Component {
     state = {
@@ -16,6 +17,14 @@ class ProductList extends Component {
 
     componentDidMount() {
         this.getProduct(1, "");
+    }
+    shouldComponentUpdate(nextState, nextProps) {
+        if(!this.props.product.isError && nextState.product.isError) {
+            toast.error(nextState.product.messageError);
+        } else if(!this.props.product.isDelete && nextState.product.isDelete) {
+            toast.info(DELETE_SUCCESSFULLY);
+        }
+        return true;
     }
     
     renderProductList= ()=>{
@@ -28,7 +37,7 @@ class ProductList extends Component {
                 <td>{item.effectiveDate}</td>
                 <td>{item.expiredDate}</td>
                 <td style={{ width: '20px' }}><button className='btn btn-success' style={{ marginRight: '10px' }}><i className="fa fa-edit"></i>
-                </button><button className='btn btn-danger' ><i className="fa fa-trash"></i></button></td>
+                </button><button className='btn btn-danger' onClick={()=>{this.props.deleteProduct(item.id)}}><i className="fa fa-trash"></i></button></td>
             </tr>
         })
     }
@@ -42,7 +51,7 @@ class ProductList extends Component {
                             <Card.Header>
                                 <Row>
                                     <Col md='9' xs='9'> <Card.Title as="h3">Product List</Card.Title></Col>
-                                    <Col md='3' xs='3'><Button href="/product">Create new Product</Button></Col>
+                                    <Col md='3' xs='3'><Button href="/createproduct">Create new Product</Button></Col>
                                 </Row>
                                 {/* <span className="d-block m-t-5">use bootstrap <code>Table</code> component</span> */}
                             </Card.Header>
@@ -62,15 +71,6 @@ class ProductList extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* <tr>
-                                                {/* <th scope="row">id</th>
-                                                <td>name name</td>
-                                                <td>active</td>
-                                                <td>14/10/2020</td>
-                                                <td>15/10/2020</td>
-                                                <td style={{ width: '20px' }}><button className='btn btn-success' style={{ marginRight: '10px' }}><i className="fa fa-edit"></i>
-                                                </button><button className='btn btn-danger' ><i className="fa fa-trash"></i></button></td>
-                                            </tr>*/}
                                             {this.renderProductList()}
                                         </tbody>
                                     </Table>
@@ -86,6 +86,9 @@ class ProductList extends Component {
     getProduct(page, text) {
         this.props.getProduct(page, text);
     }
+    delete(id) {
+        this.props.deleteProduct(id, this.props.product.page, this.props.product.searchText);
+    }
 }
 
 
@@ -100,7 +103,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getProduct: (page, text) => dispatch(productAction.getProduct(page, text))
+        getProduct: (page, text) => dispatch(productAction.getProduct(page, text)),
+        deleteProduct: (id) =>  dispatch(productAction.deleteProductById(id))
     }
 }
 
