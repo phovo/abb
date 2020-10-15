@@ -10,7 +10,9 @@ import { productAction } from '../../_actions/product.action'
 
 class ProductList extends Component {
 
-
+    onClickEdit = (id) => {
+        console.log(id);
+    }
     // componentDidMount() {
     //     this.getProduct(1, "");
     // }
@@ -62,9 +64,13 @@ class ProductList extends Component {
                                                 <td>active</td>
                                                 <td>14/10/2020</td>
                                                 <td>15/10/2020</td>
-                                                <td style={{ width: '20px' }}><button className='btn btn-success' style={{ marginRight: '10px' }}><i className="fa fa-edit"></i>
-                                                </button><button className='btn btn-danger' ><i className="fa fa-trash"></i></button></td>
-                                            </tr>                                        </tbody>
+                                                <td style={{ width: '20px' }}>
+                                                    {/* vui lòng nhét id của record vào func onClickEdit giúp tôi */}
+                                                    <button onClick={(val) => this.onClickEdit(19)} type='button' className='btn btn-success' style={{ marginRight: '10px' }}><i className="fa fa-edit"></i></button>
+                                                    <button className='btn btn-danger' ><i className="fa fa-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </Table>
                                 </Row>
                                 <div className="float-right"><Pagination  /></div>
