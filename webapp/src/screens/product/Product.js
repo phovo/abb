@@ -7,23 +7,25 @@ import * as Yup from 'yup';
 import Select from 'react-select';
 import Aux from "../../hoc/_Aux";
 import './Product.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { productAction } from '../../_actions/product.action'
+
 class ProductList extends React.Component {
 
     statusOption = [];
     typesOption = [];
     state = {};
     objSKU = {};
+    flag = true;
 
     constructor(props) {
         super(props);
         this.statusOption = [
-            { value: '1', label: 'Active' },
-            { value: '2', label: 'Inactive' },
+            { value: 'true', label: 'Active' },
+            { value: 'false', label: 'Inactive' },
         ];
 
         this.typesOption = [
@@ -47,6 +49,7 @@ class ProductList extends React.Component {
             status: 'false',
             description: ''
         };
+        console.log(localStorage.getItem('token'));
     }
     getValueExpiredDate = (e) => {
         this.setState({ expiredDate: e })
@@ -106,6 +109,16 @@ class ProductList extends React.Component {
         return true;
     }
 
+    onClickAddProduct = () => {
+        if (this.state.status == '' || this.state.type == '' || this.state.effectiveDate == undefined) {
+            document.getElementById('notify').innerHTML = 'error';
+            document.getElementById('notify').style.display = 'block';
+        } else {
+            document.getElementById('notify').style.display = 'block';
+        }
+        
+    }
+
     validationSchema = Yup.object().shape({
         name: Yup.string().required(() => {
             this.showError(true, 'inputName');
@@ -157,6 +170,19 @@ class ProductList extends React.Component {
         document.getElementById('SKUStatus').selectedIndex  = 'false';
     }
 
+    onClickSaveProduct = () => {
+            // call api
+            
+            // window.location.reload(false);
+    }
+
+    onClickRemoveAttachments = () => {
+        this.setState({
+            attachments: null
+        });
+        document.getElementById('showFileName').value = '';
+    }
+
     handleSubmit = (data) => {
         if (data.name !== '' && this.state.status !== '' && this.state.effectiveDate !== null && this.state.type !== '') {
             this.showError(false, 'inputName');
@@ -168,233 +194,233 @@ class ProductList extends React.Component {
                 name: data.name,
             });
 
+            this.state.effectiveDate = this.state.effectiveDate.toString();
+            this.state.expiredDate = this.state.expiredDate.toString();
             console.log(this.state);
-
-            // call api
             const product = this.state;
+            // this.flag = false;
             const response = this.props.createProduct(product);
-
+            this.setState({
+                effectiveDate: new Date(),
+                expiredDate: new Date()
+            });
+            console.log(response);
         } else {
             console.log('form invalid');
         }
     }
 
-    componentWillUnmount = () => {
-        console.log("123");
-    }
-
     render() {
-        return (
-            <Aux>
-                <Formik
-                    initialValues={{
-                        name: '',
-                        status: '',
-                        effectiveDate: new Date(),
-                        expiredDate: new Date(),
-                        type: '',
-                        attachments: null
-                    }}
-                    validationSchema={this.validationSchema}
-                    onSubmit={this.handleSubmit}
-                >
-                    <FormOfMik>
-                        <Row>
-                            <Col>
-                                <Card>
-                                    <Card.Header>
-                                        <Card.Title as="h3">Create new Product</Card.Title>
-                                    </Card.Header>
-                                    <Card.Body>
-
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="formBasicEmail">
-                                                    <Form.Label>Name(*)</Form.Label>
-                                                    <FastField
-                                                        name="name"
-                                                        type='text'
-                                                        className="form-control"
-                                                        id="inputName"
-                                                        placeholder='Product name'
-                                                    />
-                                                </Form.Group>
-
-                                            </Col>
-                                            <Col md={6}>
-                                                <Form.Group controlId="exampleForm.ControlInput1">
-                                                    <Form.Label>Status(*)</Form.Label>
-                                                    <Select
-                                                        options={this.statusOption}
-                                                        onChange={this.getValueStatus}
-                                                        name='status'
-                                                        id='inputStatus'
-                                                        className="form-control-md" />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="formBasicPassword">
-                                                    <Form.Label>Effective date(*)</Form.Label>
-                                                    <DatePicker
-                                                        selected={this.state.effectiveDate}
-                                                        onChange={this.getValueEffectiveDate}
-                                                        type="text"
-                                                        className="form-control datepicker"
-                                                        id="inputEffectiveDate"
-                                                        name="effectiveDate"
-                                                        dateFormat="MMMM d, yyyy h:mm aa"
-                                                        showTimeSelect
-                                                    />
-                                                </Form.Group>
-
-                                            </Col>
-                                            <Col md={6}>
-                                                <Form.Group controlId="formBasicPassword">
-                                                    <Form.Label>Expired date</Form.Label>
-                                                    <DatePicker
-                                                        selected={this.state.expiredDate}
-                                                        onChange={date => this.getValueExpiredDate(date)}
-                                                        type="text"
-                                                        className="form-control datepicker"
-                                                        id="inputExpiredDate"
-                                                        name="expiredDate"
-                                                        dateFormat="MMMM d, yyyy h:mm aa"
-                                                        showTimeSelect
-                                                    />
-                                                </Form.Group>
-                                            </Col>
-                                        </Row>
-
-                                        <Row>
-                                            <Col md={6}>
-                                                <Form.Group controlId="exampleForm.ControlInput1">
-                                                    <Form.Label>Type(*)</Form.Label>
-                                                    <Select
-                                                        id='inputType'
-                                                        name='type'
-                                                        options={this.typesOption}
-                                                        onChange={this.getValueType}
-                                                        className="form-control-md" />
-                                                </Form.Group>
-                                            </Col>
-
-                                            <Col md={2}>
-                                                <Form.Group controlId="formBasicEmail">
-                                                    <Form.Label>Attachments</Form.Label>
-                                                    <div className="custom-file">
-                                                        <input type="file" onChange={this.getValueFile} className="custom-file-input form-control" id="customFile" />
-                                                        <label className="custom-file-label form-control" htmlFor="customFile">File</label>
-                                                    </div>
-                                                </Form.Group>
-                                            </Col>
-
-                                            <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
-                                                {/* <label className='fileName form-control'>File Name</label> */}
-                                                <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
-                                                <div className="input-group-append">
-                                                    <button type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
-                                                </div>
-                                            </div>
-                                            <div className='col-md-12 float-right'>
-                                                <button className="btn btn-primary btn-add-product" type='submit'>Add</button>
-                                            </div>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        {/* <SKUList /> */}
-                        <Row>
-                            <Col>
-                                <Card>
-                                    <Card.Header>
-                                        <Row>
-                                            <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
-                                            <Col md='3' xs='3'>
-                                                <div className='float-right'>
-                                                    <button className='btn btn-success'>Save</button>
-                                                    <button className='btn btn-warning'>Cancel</button>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <Table responsive>
-                                            <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Status</th>
-                                                <th>Description</th>
-                                                <th>action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr key='0'>
-                                                    <th scope="row">0</th>
-                                                    <td>
-                                                        <input 
-                                                            id='SKUName'
+        if (this.flag) {
+            return (
+                <Aux>
+                    <Formik
+                        initialValues={{
+                            name: '',
+                            status: '',
+                            effectiveDate: new Date(),
+                            expiredDate: new Date(),
+                            type: '',
+                            attachments: null
+                        }}
+                        validationSchema={this.validationSchema}
+                        onSubmit={this.handleSubmit}
+                    >
+                        <FormOfMik>
+                            <Row>
+                                <Col>
+                                    <Card>
+                                        <Card.Header>
+                                            <Card.Title as="h3">Create new Product</Card.Title>
+                                        </Card.Header>
+                                        <Card.Body>
+    
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group controlId="formBasicEmail">
+                                                        <Form.Label>Name(*)</Form.Label>
+                                                        <FastField
                                                             name="name"
                                                             type='text'
                                                             className="form-control"
-                                                            placeholder='SKU Name'
-                                                            onChange={this.onChangeInputSKU} 
+                                                            id="inputName"
+                                                            placeholder='Product name'
+                                                        />
+                                                    </Form.Group>
+    
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group controlId="exampleForm.ControlInput1">
+                                                        <Form.Label>Status(*)</Form.Label>
+                                                        <Select
+                                                            options={this.statusOption}
+                                                            onChange={this.getValueStatus}
+                                                            name='status'
+                                                            id='inputStatus'
+                                                            className="form-control-md" />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+    
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group controlId="formBasicPassword">
+                                                            <Form.Label>Effective date(*)</Form.Label>
+                                                            <DatePicker
+                                                                selected={this.state.effectiveDate}
+                                                                onChange={this.getValueEffectiveDate}
+                                                                type="text"
+                                                                className="form-control datepicker"
+                                                                id="inputEffectiveDate"
+                                                                name="effectiveDate"
+                                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                                showTimeSelect
                                                             />
-                                                    </td>
-                                                    <td>
-                                                        <select
-                                                            onChange={this.onChangeInputSKU} 
-                                                            id='SKUStatus'
-                                                            name="status"
-                                                            className="form-control">
-                                                            <option value='true'>Active</option>
-                                                            <option value='false' selected>Inactive</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input 
-                                                            onChange={this.onChangeInputSKU}
-                                                            id='SKUDescription'
-                                                            name="description"
-                                                            type='text'
-                                                            className="form-control"
-                                                            placeholder='SKU Description'/>
-                                                    </td>
-                                                    <td style={{width: '20px'}}>
-                                                        <button onClick={this.onClickAddSKU} className='btn btn-primary' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-plus"></i></button>
-                                                    </td>
-                                                </tr> 
-                                                {this.state.SKUs.map((item) => {
-            return (<tr key={item.id}>
-                    <th scope="row">{item.id}</th>
-                    <td>{item.name}</td>
-                    <td>{item.status}</td>
-                    <td>{item.description}</td>
-                    <td style={{width: '20px'}}>
-                        <button className='btn btn-success' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-edit"></i></button>
-                        <button className='btn btn-danger' style={{width: '55px'}}><i className="fa fa-trash"></i></button>
-                    </td>
-            </tr>)
-        })}
-                                            </tbody>
-                                        </Table>
-                                        <div className="float-right"><Pagination /></div>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        {/* <div className="float-right col col-md-3">
-                            <button type="submit" className="btn btn-success btn-save" style={{ width: '100px' }}>Save</button>
-                            <button type="button" className="btn btn-warning btn-cancel" style={{ width: '100px' }}>Cancel</button>
-                        </div> */}
-                    </FormOfMik>
-                </Formik>
-            </Aux>
-        );
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group controlId="formBasicPassword">
+                                                        <Form.Label>Expired date</Form.Label>
+                                                        <DatePicker
+                                                            selected={this.state.expiredDate}
+                                                            onChange={date => this.getValueExpiredDate(date)}
+                                                            type="text"
+                                                            className="form-control datepicker"
+                                                            id="inputExpiredDate"
+                                                            name="expiredDate"
+                                                            dateFormat="MMMM d, yyyy h:mm aa"
+                                                            showTimeSelect
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+    
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group controlId="exampleForm.ControlInput1">
+                                                        <Form.Label>Type(*)</Form.Label>
+                                                        <Select
+                                                            id='inputType'
+                                                            name='type'
+                                                            options={this.typesOption}
+                                                            onChange={this.getValueType}
+                                                            className="form-control-md" />
+                                                    </Form.Group>
+                                                </Col>
+    
+                                                <Col md={2}>
+                                                    <Form.Group controlId="formBasicEmail">
+                                                        <Form.Label>Attachments</Form.Label>
+                                                        <div className="custom-file">
+                                                            <input type="file" onChange={this.getValueFile} className="custom-file-input form-control" id="customFile" />
+                                                            <label className="custom-file-label form-control" htmlFor="customFile">File</label>
+                                                        </div>
+                                                    </Form.Group>
+                                                </Col>
+    
+                                                <div className="form-group col-lg-4 col-md-4 rounded input-group block-fileName">
+                                                    <input type="text" className="form-control" id='showFileName' aria-label="Text input with segmented dropdown button" disabled={true} />
+                                                    <div className="input-group-append">
+                                                        <button onClick={this.onClickRemoveAttachments} type="button" className="btn btn-outline-secondary form-control" style={{ backgroundColor: 'red', color: 'white' }}>X</button>
+                                                    </div>
+                                                </div>
+                                                <div className='form-group col-md-12 float-right'>
+                                                    <button className="form-control btn btn-primary btn-add-product col col-md-3" type='button' onClick={this.onClickAddProduct}>Add</button>
+                                                    <span className='' style={{marginLeft: '150px', color: 'green', display: 'none'}} id='notify-add-product'>Add product success</span>
+                                                </div>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            {/* <SKUList /> */}
+                            <Row>
+                                <Col>
+                                    <Card>
+                                        <Card.Header>
+                                            <Row>
+                                                <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
+                                                <Col md='3' xs='3'>
+                                                    <div className='float-right'>
+                                                        <button type='submit' onClick={this.onClickSaveProduct} className='btn btn-success'>Save</button>
+                                                        <button type='button' className='btn btn-warning'>Cancel</button>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            <Table responsive>
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>Status</th>
+                                                    <th>Description</th>
+                                                    <th>action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr key='0'>
+                                                        <th scope="row">0</th>
+                                                        <td>
+                                                            <input 
+                                                                id='SKUName'
+                                                                name="name"
+                                                                type='text'
+                                                                className="form-control"
+                                                                placeholder='SKU Name'
+                                                                onChange={this.onChangeInputSKU} 
+                                                                />
+                                                        </td>
+                                                        <td>
+                                                            <select
+                                                                options={this.statusOption}
+                                                                onChange={this.onChangeInputSKU} 
+                                                                id='SKUStatus'
+                                                                name="status"
+                                                                className="form-control">
+                                                                <option value='true'>Active</option>
+                                                                <option value='false' selected>Inactive</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input 
+                                                                onChange={this.onChangeInputSKU}
+                                                                id='SKUDescription'
+                                                                name="description"
+                                                                type='text'
+                                                                className="form-control"
+                                                                placeholder='SKU Description'/>
+                                                        </td>
+                                                        <td style={{width: '155px'}}>
+                                                            <button type='button' onClick={this.onClickAddSKU} className='btn btn-primary' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-plus"></i></button>
+                                                        </td>
+                                                    </tr> 
+                                                    {this.state.SKUs.map((item) => {
+                                                        return (<tr key={item.id}>
+                                                                <th scope="row">{item.id}</th>
+                                                                <td>{item.name}</td>
+                                                                <td>{item.status}</td>
+                                                                <td>{item.description}</td>
+                                                                <td style={{width: '155px'}}>
+                                                                    <button className='btn btn-success' style={{marginRight: '10px', width: '55px'}}><i className="fa fa-edit"></i></button>
+                                                                    <button className='btn btn-danger' style={{width: '55px'}}><i className="fa fa-trash"></i></button>
+                                                                </td>
+                                                        </tr>)
+                                                    })}
+                                                </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </FormOfMik>
+                    </Formik>
+                </Aux>
+            );
+        } else {
+            // <div>abc</div>
+        }
     }
 }
 
