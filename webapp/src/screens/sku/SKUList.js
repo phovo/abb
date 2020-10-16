@@ -17,7 +17,6 @@ class SKUList extends React.Component {
     componentDidMount() {
         this.getSKU(1, "");
     }
-
     shouldComponentUpdate(nextState, nextProps) {
         if(!this.props.sku.isError && nextState.sku.isError) {
             toast.error(nextState.sku.messageError);
@@ -65,7 +64,7 @@ class SKUList extends React.Component {
     }
 
     search = (value) => {
-        this.getSKU(this.props.sku.page, value);
+        this.getSKU(1, value);
     }
 
     changePage = (page) => {

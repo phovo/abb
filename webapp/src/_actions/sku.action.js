@@ -1,7 +1,7 @@
 import {webComunication}  from '../_service/webcomunication.service';
 import {SKU_API} from '../_const/apis';
 import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR, EDIT_SKU,
-    FETECHED_SKU_DETAILS_ERROR, FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS } from '../_const/actions';
+    FETECHED_SKU_DETAILS_ERROR, FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS, CHANGE_PARAM_SEARCH } from '../_const/actions';
 import { history } from '../_helpers/history';
 
 export const skuAction = {
@@ -16,6 +16,7 @@ export const skuAction = {
 
 function getSKU(page, text){
     return dispatch => {
+        dispatch(changeParamSearch(text));
         webComunication.get(SKU_API, {params: {page: page, searchText: text}})
         .then((response)=>{
             dispatch(changeSKUsList(response.data));
@@ -156,12 +157,16 @@ export function getSKUsDetailsFail() {
 }
 
 export function setSkuProps(name, value) {
-    console.log('====================================');
-    console.log('name', name, value);
-    console.log('====================================');
     return {
         type: CHANGE_SKU_PROPS,
         props: name,
         value: value
+    }
+}
+
+export function changeParamSearch(text) {
+    return {
+        type: CHANGE_PARAM_SEARCH,
+        searchText: text
     }
 }

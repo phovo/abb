@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Form, Table } from 'react-bootstrap';
+import { Row, Col, Card, Form, Table, Button } from 'react-bootstrap';
 import { FastField, Form as FormOfMik, Formik } from "formik";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
@@ -10,7 +10,7 @@ import './Product.css'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { productAction } from '../../_actions/product.action'
 
 class ProductList extends React.Component {
@@ -192,6 +192,16 @@ class ProductList extends React.Component {
         document.getElementById('showFileName').value = '';
     }
 
+    onClickRemoveSKU = (id) => {
+        console.log(id);
+        this.state.SKUs.map((val, index) => {
+            if (id == val.id) {
+                this.state.SKUs.splice(index, index + 1);
+            }
+        });
+        this.forceUpdate();
+    }
+
     handleSubmit = (data) => {
         if (data.name !== '' && this.state.status !== '' && this.state.effectiveDate !== null && this.state.type !== '') {
             this.showError(false, 'inputName');
@@ -208,6 +218,13 @@ class ProductList extends React.Component {
             this.state.expiredDate = this.state.expiredDate.toISOString();
             // console.log(e.toISOString());
             console.log(this.state);
+            this.state.SKUs.map(value => {
+                if (value.status === 'true') {
+                    this.state.status = true;
+                } else {
+                    this.state.status = false;
+                }
+            })
             const product = this.state;
             // this.flag = false;
             const response = this.props.createProduct(product);
@@ -216,7 +233,7 @@ class ProductList extends React.Component {
                 expiredDate: new Date()
             });
             console.log(response);
-            window.location.href = "/productlist";
+            // window.location.href = "/productlist";
         } else {
             console.log('form invalid');
         }
@@ -421,8 +438,13 @@ class ProductList extends React.Component {
                                                         <td>{status}</td>
                                                         <td>{item.description}</td>
                                                         <td style={{ width: '155px' }}>
-                                                            <button className='btn btn-success' style={{ marginRight: '10px', width: '55px' }}><i className="fa fa-edit"></i></button>
-                                                            <button className='btn btn-danger' style={{ width: '55px' }}><i className="fa fa-trash"></i></button>
+                                                            <button className='btn btn-success' style={{ marginRight: '10px', width: '55px' }} type='button'><i className="fa fa-edit"
+                                                            ></i></button>
+                                                            <button className='btn btn-danger' style={{ width: '55px' }} onClick={(val)=>this.onClickRemoveSKU(item.id)} type='button'>
+                                                                <i className="fa fa-trash">
+                                                            
+                                                                </i>
+                                                            </button>
                                                         </td>
                                                     </tr>)
                                                 })}

@@ -1,5 +1,5 @@
 import { CREATE_SKU, CREATE_SKU_ERROR, DELETE_SKU_ERROR, EDIT_SKU, FETECHED_ALL_SKU, FETECHED_ALL_SKU_ERROR,
-    FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS } from "../_const/actions"
+    FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS, CHANGE_PARAM_SEARCH } from "../_const/actions"
 const initialState = {
     sku: [],
     searchText: '',
@@ -27,7 +27,6 @@ export function sku(state = initialState, action) {
                 page: action.page,
                 totalPage: action.totalPage,
                 size: action.size,
-                searchText: action.searchText,
                 isError: false
             };
         case FETECHED_ALL_SKU_ERROR:
@@ -73,6 +72,12 @@ export function sku(state = initialState, action) {
                     description: state.skuEdit.description,
                     [action.props]: action.value
                 }
+            }
+        case CHANGE_PARAM_SEARCH: 
+            return {
+                ...state,
+                isError: false,
+                searchText: action.searchText
             }
         default:
             return {...state, isError: false}
