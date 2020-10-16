@@ -42,7 +42,7 @@ class SKUList extends React.Component {
                             <Card.Header>
                                 <Row>
                                     <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
-                                    <Col md='3'  xs='3'><Button href="/createsku">Create new SKU</Button></Col>
+                                    <Col md='3'  xs='3' ><Button  className="float-right text-center" style={{padding:'10px 34px'}}href="/createsku">Create new SKU</Button></Col>
                                 </Row>
                                 {/* <span className="d-block m-t-5">use bootstrap <code>Table</code> component</span> */}
                             </Card.Header>

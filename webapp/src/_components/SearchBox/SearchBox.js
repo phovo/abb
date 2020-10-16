@@ -28,7 +28,7 @@ class SearchBox extends React.Component {
                         </Form>
                     </Col>
                     <Col md={3}>
-                        <Button className="float-right" onClick={this.search} style={{width: '171px'}}>Search</Button>
+                        <Button className="float-right" onClick={this.search} style={{padding:'10px 63px'}}>Search</Button>
                     </Col>
                 </Row>
             </Aux>
