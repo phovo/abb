@@ -10,8 +10,11 @@ import './Product.css'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { productAction } from '../../_actions/product.action'
+import { history } from '../../_helpers/history';
+import { webComunication } from '../../_service/webcomunication.service';
+import { PRODUCT_API, SKU_API } from '../../_const/apis';
 
 class ProductList extends React.Component {
 
@@ -48,8 +51,28 @@ class ProductList extends React.Component {
             status: 'false',
             description: ''
         };
+        // this.getSKUs();
         console.log(localStorage.getItem('token'));
     }
+
+    getSKUs = () => {
+        var id = window.location.href.split("?");
+        // log
+        console.log(id);
+        if (id[1] !== undefined || id !== '') {
+            webComunication.get(`${SKU_API}/${id[1]}`)
+            .then((response) => {
+                console.log(response);
+                this.state.SKUs.push(response.data.data)
+            }).catch((err) => {
+                console.log('error');
+            })
+        } else {
+
+        }
+        // console.log(id[2]);
+    }
+
     getValueExpiredDate = (e) => {
         this.setState({ expiredDate: e })
     }
@@ -109,12 +132,15 @@ class ProductList extends React.Component {
         return true;
     }
 
+    flag = false;
     onClickAddProduct = () => {
-        if (this.state.status === 'true') {
-            this.setState({status: true});
-        } else {
-            this.setState({status: false});
-        }
+        this.flag = true;
+        this.forceUpdate();
+        // if (this.state.status === 'true') {
+        //     this.setState({status: true});
+        // } else {
+        //     this.setState({status: false});
+        // }
     }
 
     onClickCancelProduct = () => {
@@ -152,6 +178,18 @@ class ProductList extends React.Component {
             this.objSKU.description = event.target.value;
             this.showError(false, 'SKUDescription');
         }
+    }
+
+    editSKU = null;
+
+    onClickEditSKU = (id) => {
+        console.log(id);
+        this.state.SKUs.map((val, index) => {
+            if (id == val.id) {
+                this.editSKU = val;
+            }
+        })
+        this.forceUpdate();
     }
 
     onClickAddSKU = () => {
@@ -238,8 +276,11 @@ class ProductList extends React.Component {
             console.log('form invalid');
         }
     }
-
+    
     render() {
+        if (this.editSKU !== null) {
+            return <Redirect to='/productlist' />
+        } 
         return (
             <Aux>
                 <Formik
@@ -354,8 +395,9 @@ class ProductList extends React.Component {
                                             </div>
                                             <div className='form-group col-md-12 float-right'>
                                                 <button className="form-control btn btn-primary btn-add-product col col-md-3" type='button' onClick={this.onClickAddProduct} style={{width: '100px'}}>Add</button>
-                                                {/* <span className='' style={{ marginLeft: '150px', color: 'green', display: 'none', width: '100px' }} id='notify-add-product'>Add product success</span>
-                                                <span className='' style={{ marginLeft: '150px', color: 'red', display: 'none' }} id='notify-error-add'>Add product error</span> */}
+                                                
+                                                <button type='submit' onClick={this.onClickSaveProduct} className='btn btn-success float-right' style={{width: '100px'}}>Save</button>
+                                                <button type='button' onClick={this.onClickCancelProduct} className='btn btn-warning float-right' style={{width: '100px'}}>Cancel</button>
                                             </div>
                                         </Row>
                                     </Card.Body>
@@ -363,21 +405,16 @@ class ProductList extends React.Component {
                             </Col>
                         </Row>
                         {/* <SKUList /> */}
-                        <Row>
+                        {/* <Row>
                             <Col>
                                 <Card>
                                     <Card.Header>
                                         <Row>
                                             <Col md='9' xs='9'> <Card.Title as="h3">SKU List</Card.Title></Col>
-                                            <Col md='3' xs='3'>
-                                                <div className='float-right'>
-                                                    <button type='submit' onClick={this.onClickSaveProduct} className='btn btn-success' style={{width: '100px'}}>Save</button>
-                                                    <button type='button' onClick={this.onClickCancelProduct} className='btn btn-warning' style={{width: '100px'}}>Cancel</button>
-                                                </div>
-                                            </Col>
+
                                         </Row>
                                     </Card.Header>
-                                    <Card.Body>
+                                    {/* <Card.Body>
                                         <Table responsive>
                                             <thead>
                                                 <tr>
@@ -438,7 +475,9 @@ class ProductList extends React.Component {
                                                         <td>{status}</td>
                                                         <td>{item.description}</td>
                                                         <td style={{ width: '155px' }}>
-                                                            <button className='btn btn-success' style={{ marginRight: '10px', width: '55px' }} type='button'><i className="fa fa-edit"
+                                                            <button className='btn btn-success' style={{ marginRight: '10px', width: '55px' }} type='button'
+                                                            onClick={(val) => this.onClickEditSKU(item.id)}
+                                                            ><i className="fa fa-edit"
                                                             ></i></button>
                                                             <button className='btn btn-danger' style={{ width: '55px' }} onClick={(val)=>this.onClickRemoveSKU(item.id)} type='button'>
                                                                 <i className="fa fa-trash">
@@ -450,10 +489,11 @@ class ProductList extends React.Component {
                                                 })}
                                             </tbody>
                                         </Table>
-                                    </Card.Body>
-                                </Card>
+                                    </Card.Body> */}
+                                {/* </Card>
                             </Col>
-                        </Row>
+                        </Row> */} 
+                   
                     </FormOfMik>
                 </Formik>
             </Aux>
@@ -463,7 +503,7 @@ class ProductList extends React.Component {
 }
 
 const mapStateToProps = state => {
-
+    console.log(state);
     return {
         layout: state.reducer.layout,
         isOpen: state.reducer.isOpen,
