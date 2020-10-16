@@ -98,9 +98,9 @@ func UpdateProduct(context *gin.Context) {
 // DeleteProduct controller
 func DeleteProduct(context *gin.Context) {
 	id := context.Param("id")
-	operationResult := service.DeleteSKU(id)
+	operationResult := service.DeleteProduct(id)
 	if operationResult.Error != nil {
-		response.ERROR(context, http.StatusBadRequest, utils.ERROR_DELETE_ENTITY)
+		response.ERROR(context, http.StatusBadRequest, operationResult.Error.Error())
 		return
 	}
 	response.JSON(context, http.StatusOK, operationResult.Result)
