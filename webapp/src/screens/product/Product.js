@@ -418,7 +418,7 @@ class ProductList extends React.Component {
                                         <Table responsive>
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>#</th>  
                                                     <th>Name</th>
                                                     <th>Status</th>
                                                     <th>Description</th>
