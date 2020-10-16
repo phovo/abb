@@ -32,7 +32,7 @@ class ProductList extends Component {
     }
     
     renderProductList= ()=>{
-        return this.props.product.map((item,index)=>{
+        return this.props.product.product.map((item,index)=>{
             return <tr key ={index}>
                 <td scope ="row">{item.id}</td>
                 <td>{item.name}</td>
@@ -108,14 +108,14 @@ class ProductList extends Component {
     getProduct(page, text) {
         this.props.getProduct(page, text);
     }
-    delete(id) {
+    delete(id,page,text) {
         this.props.deleteProduct(id, this.props.product.page, this.props.product.searchText);
     }
     changePage = (page) => {
         this.getProduct(page, this.props.product.searchText);
     }
     search = (value) => {
-        this.getProduct(this.props.product.page, value);
+        this.getProduct(1, value);
     }
 }
 
@@ -125,14 +125,14 @@ const mapStateToProps = state => {
         layout: state.reducer.layout,
         isOpen: state.reducer.isOpen,
         isTrigger: state.reducer.isTrigger,
-        product: state.product.product
+        product: state.product
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         getProduct: (page, text) => dispatch(productAction.getProduct(page, text)),
-        deleteProduct: (id) =>  dispatch(productAction.deleteProductById(id))
+        deleteProduct: (id,page,text) =>  dispatch(productAction.deleteProductById(id,page,text))
     }
 }
 

@@ -1,8 +1,10 @@
 import {webComunication}  from '../_service/webcomunication.service';
 import {SKU_API} from '../_const/apis';
 import {FETECHED_ALL_SKU,FETECHED_ALL_SKU_ERROR,DELETE_SKU_ERROR, DELETED_SKU, CREATE_SKU, CREATE_SKU_ERROR, EDIT_SKU,
-    FETECHED_SKU_DETAILS_ERROR, FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS, CHANGE_PARAM_SEARCH } from '../_const/actions';
+    FETECHED_SKU_DETAILS_ERROR, FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS, CHANGE_PARAM_SEARCH, CREATE_SKU_SUCCESS } from '../_const/actions';
 import { history } from '../_helpers/history';
+
+
 
 export const skuAction = {
     getSKU,
@@ -60,7 +62,6 @@ function updateSKUDetails(sku) {
     return dispatch => {
         webComunication.put(`${SKU_API}/${sku.id}`, sku)
         .then((response)=>{
-            console.log(response.data);
             history.push('/sku');
         }).catch((err) => {
             dispatch(saveSKUFAIL());
@@ -83,6 +84,7 @@ export function createSKU (sku){
     return dispatch =>{
         webComunication.post(SKU_API,sku)
         .then((response)=>{
+            dispatch(saveSKU());
             history.push('/sku');
         }).catch((err)=>{
             dispatch(saveSKUFAIL());
@@ -104,6 +106,8 @@ export function updateSKU (skuID,page,text){
 }
 
 //
+
+
 
 export function editSKU(){
     return{

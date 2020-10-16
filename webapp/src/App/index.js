@@ -25,7 +25,7 @@ class App extends Component {
                   exact={route.exact}
                   name={route.name}
                   render={props =>( localStorage.getItem('token') ? 
-                  <Redirect to={{ pathname: '/sku', state: { from: props.location } }}/> :
+                  <Redirect to={{ pathname: '/login', state: { from: props.location } }}/> :
                   <route.component {...props} />
                   )} />
           ) : (null);

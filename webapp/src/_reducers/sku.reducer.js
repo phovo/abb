@@ -1,5 +1,6 @@
 import { CREATE_SKU, CREATE_SKU_ERROR, DELETE_SKU_ERROR, EDIT_SKU, FETECHED_ALL_SKU, FETECHED_ALL_SKU_ERROR,
     FETECHED_SKU_DETAILS, CHANGE_SKU_PROPS, CHANGE_PARAM_SEARCH } from "../_const/actions"
+import { CREATE_SKU_SUCCESS_MESSAGE } from "../_const/message";
 const initialState = {
     sku: [],
     searchText: '',
@@ -44,7 +45,8 @@ export function sku(state = initialState, action) {
         case CREATE_SKU:
             return {
                 ...state,
-                messageSucess: 'Create data SKU is success'
+                isError: false,
+                messageSuccess: 'Create SKU is successful'
             };
         case CREATE_SKU_ERROR:
             return {
