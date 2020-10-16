@@ -115,7 +115,7 @@ class ProductList extends Component {
         this.getProduct(page, this.props.product.searchText);
     }
     search = (value) => {
-        this.getProduct(this.props.product.page, value);
+        this.getProduct(1, value);
     }
 }
 
